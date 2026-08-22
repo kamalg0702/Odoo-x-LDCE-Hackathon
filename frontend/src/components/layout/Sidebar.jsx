@@ -13,32 +13,32 @@ export function Sidebar({
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'My Trips', path: '/trips', icon: Compass },
     { label: 'Create Trip', path: '/trips/new', icon: PlusCircle },
-    { label: 'Profile & Settings', path: '/profile', icon: User },
+    { label: 'Profile', path: '/profile', icon: User },
   ];
 
   if (isAdmin) {
-    navItems.push({ label: 'Admin Panel', path: '/admin', icon: ShieldCheck });
+    navItems.push({ label: 'Admin', path: '/admin', icon: ShieldCheck });
   }
 
   return (
     <aside
       style={{
-        width: '240px',
-        backgroundColor: '#FFFFFF',
-        borderRight: '1px solid var(--mist)',
-        minHeight: 'calc(100vh - 64px)',
-        padding: '24px 16px',
+        width: '195px',
+        backgroundColor: 'var(--paper-card)',
+        borderRight: '1px solid var(--card-border)',
+        minHeight: 'calc(100vh - 54px)',
+        padding: '16px 10px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px',
+        gap: '16px',
         flexShrink: 0
       }}
     >
       <div>
-        <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700', color: 'var(--ink-subtle)', marginBottom: '12px', paddingLeft: '12px' }}>
-          Navigation
+        <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: '700', color: 'var(--ink-subtle)', marginBottom: '8px', paddingLeft: '8px' }}>
+          Menu
         </div>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPath === item.path || (item.path !== '/dashboard' && currentPath.startsWith(item.path) && item.path !== '/trips/new');
@@ -49,18 +49,18 @@ export function Sidebar({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px',
-                  padding: '10px 14px',
+                  gap: '10px',
+                  padding: '8px 10px',
                   borderRadius: 'var(--radius-md)',
-                  fontSize: '14px',
-                  fontWeight: isActive ? '600' : '500',
+                  fontSize: '13px',
+                  fontWeight: isActive ? '700' : '500',
                   color: isActive ? 'var(--traverse)' : 'var(--ink)',
                   backgroundColor: isActive ? 'var(--traverse-light)' : 'transparent',
                   textAlign: 'left',
                   transition: 'all var(--transition-fast)'
                 }}
               >
-                <Icon size={18} style={{ color: isActive ? 'var(--traverse)' : 'var(--ink-muted)' }} />
+                <Icon size={16} style={{ color: isActive ? 'var(--traverse)' : 'var(--ink-muted)' }} />
                 <span>{item.label}</span>
               </button>
             );
@@ -68,13 +68,13 @@ export function Sidebar({
         </nav>
       </div>
 
-      <div style={{ marginTop: 'auto', backgroundColor: 'var(--sand)', padding: '16px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--sand-dark)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--terrain)' }} />
-          <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--ink)' }}>GlobeTrotter Engine</span>
+      <div style={{ marginTop: 'auto', backgroundColor: 'var(--sand)', padding: '12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--sand-dark)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--terrain)' }} />
+          <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--ink)' }}>GlobeTrotter v2.0</span>
         </div>
-        <p style={{ fontSize: '11px', color: 'var(--ink-muted)', lineHeight: '1.4' }}>
-          Real-time route optimization, city cost indexing & smart budget tracking.
+        <p style={{ fontSize: '10px', color: 'var(--ink-muted)', lineHeight: '1.3' }}>
+          Real-time INR budget calculations & route engine.
         </p>
       </div>
     </aside>

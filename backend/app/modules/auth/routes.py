@@ -50,6 +50,29 @@ def login():
         }
     )
 
+@auth_bp.route("/google", methods=["POST"])
+def google_auth():
+    data = request.get_json() or {}
+    email = data.get("email")
+    name = data.get("name")
+    avatar_url = data.get("avatar_url")
+
+    if not email:
+        return api_response(error="Google email required", status_code=400)
+
+    from .service import authenticate_google_user
+    result, error = authenticate_google_user(email=email, name=name, avatar_url=avatar_url)
+    if error:
+        return api_response(error=error, status_code=400)
+
+    return api_response(
+        data={
+            "user": user_schema.dump(result["user"]),
+            "access_token": result["access_token"],
+            "refresh_token": result["refresh_token"]
+        }
+    )
+
 @auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():

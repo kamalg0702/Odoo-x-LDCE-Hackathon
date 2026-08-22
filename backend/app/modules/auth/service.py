@@ -38,6 +38,29 @@ def authenticate_user(email: str, password: str):
         "refresh_token": refresh_token
     }, None
 
+def authenticate_google_user(email: str, name: str, avatar_url: str = None):
+    email = email.lower().strip()
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        # Auto-create user from Google OAuth
+        user = User(
+            name=name.strip() if name else "Google Explorer",
+            email=email,
+            avatar_url=avatar_url or f"https://api.dicebear.com/7.x/bottts/svg?seed={email}",
+            role="user",
+            preferred_currency="INR"
+        )
+        user.set_password("GoogleAuthExternalPass_2026!")
+        user.save()
+
+    access_token = create_access_token(identity=str(user.id))
+    refresh_token = create_refresh_token(identity=str(user.id))
+    return {
+        "user": user,
+        "access_token": access_token,
+        "refresh_token": refresh_token
+    }, None
+
 def get_user_by_id(user_id):
     return User.query.get(user_id)
 

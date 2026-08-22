@@ -49,6 +49,26 @@ export function useAuth() {
     }
   }, [navigate, setAuthData, setLoading, setError, showToast]);
 
+  const loginWithGoogle = useCallback(async (email, name, avatar_url) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await authApi.googleAuth({ email, name, avatar_url });
+      const { user, access_token, refresh_token } = res.data;
+      setAuthData(user, access_token, refresh_token);
+      showToast(`Signed in with Google as ${user.name}!`, 'success');
+      navigate('/dashboard');
+      return user;
+    } catch (err) {
+      const message = err.error || 'Google authentication failed.';
+      setError(message);
+      showToast(message, 'error');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setAuthData, setLoading, setError, showToast]);
+
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
@@ -86,6 +106,7 @@ export function useAuth() {
     error,
     login,
     register,
+    loginWithGoogle,
     logout,
     updateProfile
   };

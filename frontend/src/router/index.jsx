@@ -8,6 +8,7 @@ import { Toast } from '../components/layout/PageWrapper';
 import { Compass } from 'lucide-react';
 
 // Lazy-loaded Feature Screens
+const HomePage = lazy(() => import('../features/home/HomePage'));
 const AuthPage = lazy(() => import('../features/auth/AuthPage'));
 const DashboardPage = lazy(() => import('../features/dashboard/DashboardPage'));
 const CreateTripPage = lazy(() => import('../features/trips/CreateTripPage'));
@@ -198,9 +199,9 @@ export default function AppRouter() {
                 }
               />
 
-              {/* Root Fallback */}
-              <Route path="/" element={<Navigate to={user ? "/dashboard" : "/auth/login"} replace />} />
-              <Route path="*" element={<Navigate to={user ? "/dashboard" : "/auth/login"} replace />} />
+              {/* Root Landing Page */}
+              <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <HomePage />} />
+              <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />
             </Routes>
           </Suspense>
         </div>

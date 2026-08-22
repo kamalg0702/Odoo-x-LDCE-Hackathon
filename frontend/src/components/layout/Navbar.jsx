@@ -1,5 +1,6 @@
 import React from 'react';
-import { Compass, Plus, User, LogOut, Menu, ShieldCheck } from 'lucide-react';
+import { Compass, Plus, User, LogOut, Menu, ShieldCheck, Sliders } from 'lucide-react';
+import { useUIStore, THEMES } from '../../core/store/ui.store';
 
 export function Navbar({
   user,
@@ -8,41 +9,65 @@ export function Navbar({
   onToggleSidebar,
   currentPath = ''
 }) {
+  const { theme, setTheme } = useUIStore();
+
   return (
-    <header className="glass-header" style={{ position: 'sticky', top: 0, zIndex: 100, height: '64px', display: 'flex', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <header className="glass-header" style={{ position: 'sticky', top: 0, zIndex: 100, height: '54px', display: 'flex', alignItems: 'center' }}>
+      <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         
         {/* Left: Brand / Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {user && (
             <button
               onClick={onToggleSidebar}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', borderRadius: 'var(--radius-md)', color: 'var(--ink-muted)' }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5px', borderRadius: 'var(--radius-md)', color: 'var(--ink-muted)' }}
               aria-label="Toggle Navigation Sidebar"
             >
-              <Menu size={20} />
+              <Menu size={18} />
             </button>
           )}
           <div
-            onClick={() => onNavigate(user ? '/dashboard' : '/auth/login')}
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+            onClick={() => onNavigate(user ? '/dashboard' : '/')}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
           >
-            <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', boxShadow: 'var(--shadow-sm)' }}>
-              <Compass size={22} className="route-dash-animated" style={{ color: 'var(--paper)' }} />
+            <div style={{ width: '30px', height: '30px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', boxShadow: 'var(--shadow-sm)' }}>
+              <Compass size={18} className="route-dash-animated" style={{ color: '#FFFFFF' }} />
             </div>
             <div>
-              <span className="font-display" style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.5px', color: 'var(--ink)' }}>
+              <span className="font-display" style={{ fontSize: '17px', fontWeight: '800', letterSpacing: '-0.5px', color: 'var(--ink)' }}>
                 GlobeTrotter
-              </span>
-              <span style={{ fontSize: '10px', display: 'block', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700', color: 'var(--traverse)', lineHeight: '1' }}>
-                Multi-City Atlas
               </span>
             </div>
           </div>
         </div>
 
-        {/* Right: Actions & User */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Right: Actions, Theme Switcher & User */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Dynamic Theme Picker */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              style={{
+                padding: '4px 8px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '12px',
+                fontWeight: '600',
+                border: '1px solid var(--card-border)',
+                backgroundColor: 'var(--paper-card)',
+                color: 'var(--ink)',
+                cursor: 'pointer'
+              }}
+              title="Change Theme"
+            >
+              {THEMES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.icon} {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {user ? (
             <>
               <button
@@ -50,17 +75,16 @@ export function Navbar({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
+                  gap: '4px',
                   backgroundColor: 'var(--traverse)',
                   color: '#FFFFFF',
-                  padding: '7px 14px',
+                  padding: '6px 12px',
                   borderRadius: 'var(--radius-md)',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)'
+                  fontSize: '12px',
+                  fontWeight: '600'
                 }}
               >
-                <Plus size={16} />
+                <Plus size={14} />
                 <span>New Trip</span>
               </button>
 
@@ -70,43 +94,42 @@ export function Navbar({
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
+                    gap: '4px',
                     backgroundColor: 'var(--sand)',
                     color: 'var(--ink)',
-                    padding: '7px 12px',
+                    padding: '6px 10px',
                     borderRadius: 'var(--radius-md)',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     fontWeight: '600',
                     border: '1px solid var(--sand-dark)'
                   }}
                   title="Admin Dashboard"
                 >
-                  <ShieldCheck size={16} style={{ color: 'var(--traverse)' }} />
+                  <ShieldCheck size={14} style={{ color: 'var(--traverse)' }} />
                   <span>Admin</span>
                 </button>
               )}
 
-              {/* User Avatar & Profile */}
+              {/* User Profile */}
               <div
                 onClick={() => onNavigate('/profile')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '4px 8px',
+                  gap: '6px',
+                  padding: '3px 8px',
                   borderRadius: 'var(--radius-full)',
                   cursor: 'pointer',
                   border: '1px solid var(--mist)',
-                  backgroundColor: '#FFFFFF',
-                  transition: 'background var(--transition-fast)'
+                  backgroundColor: 'var(--paper-card)'
                 }}
               >
                 <img
                   src={user.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.email}`}
                   alt={user.name}
-                  style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }}
+                  style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }}
                 />
-                <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--ink)', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink)', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.name.split(' ')[0]}
                 </span>
               </div>
@@ -116,26 +139,20 @@ export function Navbar({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '8px',
+                  padding: '6px',
                   borderRadius: 'var(--radius-md)',
-                  color: 'var(--ink-muted)',
-                  transition: 'color var(--transition-fast)'
+                  color: 'var(--ink-muted)'
                 }}
                 title="Logout"
               >
-                <LogOut size={18} />
+                <LogOut size={16} />
               </button>
             </>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button
                 onClick={() => onNavigate('/auth/login')}
-                style={{
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: 'var(--ink)',
-                  padding: '8px 16px'
-                }}
+                style={{ fontSize: '13px', fontWeight: '600', color: 'var(--ink)', padding: '6px 10px' }}
               >
                 Sign In
               </button>
@@ -144,13 +161,13 @@ export function Navbar({
                 style={{
                   backgroundColor: 'var(--traverse)',
                   color: '#FFFFFF',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   fontWeight: '600',
-                  padding: '8px 18px',
+                  padding: '6px 14px',
                   borderRadius: 'var(--radius-md)'
                 }}
               >
-                Get Started
+                Start Free
               </button>
             </div>
           )}

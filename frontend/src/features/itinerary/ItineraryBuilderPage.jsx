@@ -69,9 +69,10 @@ function SortableStopItem({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 100 : 1
+    transition: transition || 'transform 250ms cubic-bezier(0.2, 0, 0, 1)',
+    opacity: isDragging ? 0.4 : 1,
+    zIndex: isDragging ? 100 : 1,
+    touchAction: 'none'
   };
 
   const days = calculateDays(stop.arrival_date, stop.departure_date);
