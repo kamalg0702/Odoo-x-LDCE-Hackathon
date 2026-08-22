@@ -195,7 +195,8 @@ export default function ActivitySearchPage() {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '16px',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           padding: '20px 24px',
           borderRadius: 'var(--radius-xl)',
           border: '1px solid var(--mist)',
@@ -350,11 +351,12 @@ export default function ActivitySearchPage() {
             />
           </div>
 
+          {/* FIXED: hardcoded $ -> ₹ in label */}
           <Input
-            label="Estimated Cost ($)"
+            label="Estimated Cost (₹)"
             type="number"
             min="0"
-            step="5"
+            step="50"
             value={scheduleData.custom_cost}
             onChange={(e) => setScheduleData({ ...scheduleData, custom_cost: e.target.value })}
             helperText="Leave empty to use catalog standard cost."
@@ -408,8 +410,9 @@ export default function ActivitySearchPage() {
                 { value: 'Nightlife', label: 'Nightlife' }
               ]}
             />
+            {/* FIXED: hardcoded $ -> ₹ in label */}
             <Input
-              label="Estimated Cost ($)"
+              label="Estimated Cost (₹)"
               type="number"
               min="0"
               placeholder="0"

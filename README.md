@@ -1,24 +1,36 @@
-# GlobeTrotter — Multi-City Personalized Travel Planner
+# GlobeTrotter — Personalized Multi-City Travel Planning Web Application
 
-> **"Atlas meets Dashboard"**: An intelligent, modular full-stack web application for planning multi-city journeys with interactive route visualization, drag-and-drop itinerary sequencing, destination cost indexing, real-time budget calculation, day-by-day Gantt timeline, and public sharing.
+> **"Atlas meets Dashboard"**: An intelligent, modular full-stack web application for planning multi-city journeys with interactive route visualization, drag-and-drop itinerary sequencing, destination cost indexing, real-time INR budget calculations, day-by-day Gantt timeline, 6 dynamic visual themes, Google authentication, and public sharing.
 
 ---
 
 ## 🌟 Key Features & 13 Screens
 
-1. **Login & Registration (`/auth/login`, `/auth/register`)**: JWT authentication (access & refresh tokens) with quick-fill demo traveler and administrator credentials.
-2. **Travel Dashboard (`/dashboard`)**: Central hub displaying active trips, key statistics, upcoming journey route previews, and curated destination highlights.
-3. **Trip Creation (`/trips/new`)**: Smart trip initiator with duration calculator, budget limit goal, and curated artwork presets.
-4. **My Trips (`/trips`)**: Filterable journey grid with status tags, search, and signature animated SVG route lines connecting city dots.
+1. **Login & Registration (`/auth/login`, `/auth/register`)**: JWT authentication (access & refresh tokens), Google OAuth sign-in modal, and 1-click quick-fill demo traveler and administrator credentials.
+2. **Travel Dashboard (`/dashboard`)**: Central hub displaying active trips, key statistics, upcoming journey route previews, and curated destination highlights with real-time INR currency formatting.
+3. **Trip Creation (`/trips/new`)**: Smart trip initiator with duration calculator, target budget limit goal, and curated artwork presets.
+4. **My Trips (`/trips`)**: Filterable journey grid with status tags, keyword search, and signature animated SVG route lines connecting city dots.
 5. **Itinerary Builder (`/trips/:id/build`)**: Drag-and-drop reordering of stops powered by `@dnd-kit`, transition modes (Flight, Train, Drive, Bus, Ferry), budget allocations, and stop notes.
 6. **Itinerary Overview (`/trips/:id/view`)**: Chronological journey blueprint with destination photography, stop numbers, and scheduled activities.
 7. **City Catalog & Discovery (`/trips/:id/cities`)**: Prepopulated catalog of **50+ global destinations** with cost indices, popularity ratings, descriptions, and 1-click "Add to Trip".
 8. **Activity Discovery & Scheduler (`/trips/:id/stops/:stopId/activities`)**: Filter by category (Culture, Food, Adventure, Sightseeing, Nature, Nightlife) with custom scheduling, time tags, and cost tracking.
-9. **Budget & Cost Breakdown (`/trips/:id/budget`)**: Interactive Recharts visualizations (Category Pie Chart + Stop Comparison Bar Chart), overbudget alerts, and custom expense logger.
+9. **Budget & Cost Breakdown (`/trips/:id/budget`)**: Interactive Recharts visualizations (Category Pie Chart + Stop Comparison Bar Chart with ₹ tick formatting), overbudget alerts, and custom expense logger.
 10. **Timeline & Calendar (`/trips/:id/calendar`)**: Day-by-day vertical schedule matching days to destination stays and specific activity times.
 11. **Public Share View (`/share/:slug`)**: High-aesthetic read-only public trip overview requiring **zero authentication**.
-12. **Profile & Settings (`/profile`)**: Manage user avatar presets, bio, preferred currency (`USD`, `EUR`, `GBP`, `JPY`, `AUD`, `CAD`, `INR`), and credentials.
+12. **Profile & Settings (`/profile`)**: Manage user avatar presets, bio, preferred currency (`INR`, `USD`, `EUR`, `GBP`, `JPY`, `AUD`, `CAD`), and credentials.
 13. **Admin Dashboard (`/admin`)**: Role-gated portal displaying platform statistics, trip analytics, and traveler role toggles.
+
+---
+
+## 🎨 6 Dynamic Visual Themes
+
+GlobeTrotter comes built-in with 6 visual themes selectable dynamically by users:
+1. **Atlas Classic (`atlas`)**: Warm cartography, rich ink and paper tones.
+2. **Midnight Explorer (`midnight`)**: Deep dark mode with high-contrast shadows and glowing highlights.
+3. **Emerald Oasis (`emerald`)**: Lush forest greens and soothing natural tones.
+4. **Nordic Frost (`nordic`)**: Arctic blue minimalist design.
+5. **Sunset Terracotta (`sunset`)**: Desert warmth and terracotta tones.
+6. **Cyberpunk Voyager (`cyberpunk`)**: Neon violet and cyan dark theme with glowing elevation shadows.
 
 ---
 
@@ -27,7 +39,7 @@
 ### Backend (`backend/`)
 Every module is strictly self-contained with no cross-module model definitions import:
 - `app/core/`: `config.py`, `database.py`, `extensions.py`, `middleware.py` (standard response format `{ success: bool, data: {}, error: null }`).
-- `app/modules/auth/`: User registration, login, refresh, logout, profile update.
+- `app/modules/auth/`: User registration, login, refresh, logout, Google OAuth, profile update.
 - `app/modules/trips/`: Trip CRUD, cover photo picker, slug generator.
 - `app/modules/stops/`: Stop CRUD, reordering endpoint (`PATCH /api/trips/:id/stops/reorder`).
 - `app/modules/cities/`: 50+ world cities catalog with search and filters.
@@ -35,11 +47,11 @@ Every module is strictly self-contained with no cross-module model definitions i
 - `app/modules/budget/`: Automated financial summation and custom expense items.
 - `app/modules/share/`: Public share token generator and unauthenticated public trip resolver.
 - `app/modules/admin/`: System-wide analytics and role governance.
-- `seeds.py`: Prepopulates 50+ cities, curated activities, demo accounts, and a sample trip.
+- `seeds.py`: Prepopulates 50+ cities, curated activities, demo accounts, and a sample trip in INR.
 
 ### Frontend (`frontend/src/`)
 - `core/api/`: Modular Axios domain files (`client.js`, `auth.api.js`, `trips.api.js`, etc.) with automated JWT refresh interceptors.
-- `core/store/`: Independent Zustand stores (`auth.store.js`, `trips.store.js`, `stops.store.js`, etc.).
+- `core/store/`: Independent Zustand stores (`auth.store.js`, `trips.store.js`, `stops.store.js`, `ui.store.js`, etc.).
 - `core/hooks/`: Custom hooks (`useAuth`, `useTrip`, `useStops`, `useBudget`, `useCities`).
 - `core/utils/`: Formatting utilities (`date.js`, `currency.js`, `slug.js`).
 - `components/ui/`: Pure props-only UI primitives (`Button`, `Card`, `Modal`, `Input`, `Badge`, `Tabs`, `ProgressBar`).
@@ -104,7 +116,7 @@ npm run dev
 ## 🗄️ Database Configuration & PostgreSQL Swapping
 
 By default, GlobeTrotter utilizes a local SQLite database (`backend/globetrotter.db`).
-To switch to PostgreSQL in production, simply supply the `DATABASE_URL` environment variable:
+To switch to PostgreSQL in production, supply the `DATABASE_URL` environment variable:
 
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/globetrotter
@@ -115,7 +127,7 @@ Zero code changes required.
 
 ## 🧪 Testing
 
-To run the automated backend test suite covering all API contracts:
+To run the automated backend test suite covering all API contracts and Google OAuth:
 ```bash
 cd backend
 python test_api.py

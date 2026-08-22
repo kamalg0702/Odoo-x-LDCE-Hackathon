@@ -206,7 +206,8 @@ export default function ItineraryViewPage() {
                   <div
                     style={{
                       padding: '20px',
-                      backgroundColor: '#FFFFFF',
+                      // FIXED: hardcoded white → var(--paper-card)
+                      backgroundColor: 'var(--paper-card)',
                       borderRadius: 'var(--radius-lg)',
                       border: '1px dashed var(--mist-dark)',
                       display: 'flex',

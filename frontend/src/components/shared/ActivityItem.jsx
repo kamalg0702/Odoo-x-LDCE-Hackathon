@@ -33,7 +33,8 @@ export function ActivityItem({
         display: 'flex',
         gap: '14px',
         padding: '14px',
-        backgroundColor: isCompleted ? 'var(--paper)' : '#FFFFFF',
+        // FIXED: hardcoded white → var(--paper-card)
+        backgroundColor: isCompleted ? 'var(--paper)' : 'var(--paper-card)',
         borderRadius: 'var(--radius-lg)',
         border: `1px solid ${isCompleted ? 'var(--sand-dark)' : 'var(--mist)'}`,
         opacity: isCompleted ? 0.75 : 1,

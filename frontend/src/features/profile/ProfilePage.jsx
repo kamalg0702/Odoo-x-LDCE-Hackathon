@@ -23,7 +23,7 @@ export default function ProfilePage() {
     name: user?.name || '',
     avatar_url: user?.avatar_url || '',
     bio: user?.bio || '',
-    preferred_currency: user?.preferred_currency || 'USD',
+    preferred_currency: user?.preferred_currency || 'INR',
     password: ''
   });
 
@@ -131,13 +131,13 @@ export default function ProfilePage() {
               value={formData.preferred_currency}
               onChange={(e) => setFormData({ ...formData, preferred_currency: e.target.value })}
               options={[
+                { value: 'INR', label: 'INR (₹ - Indian Rupee)' },
                 { value: 'USD', label: 'USD ($ - US Dollar)' },
                 { value: 'EUR', label: 'EUR (€ - Euro)' },
                 { value: 'GBP', label: 'GBP (£ - British Pound)' },
                 { value: 'JPY', label: 'JPY (¥ - Japanese Yen)' },
                 { value: 'AUD', label: 'AUD (A$ - Australian Dollar)' },
-                { value: 'CAD', label: 'CAD (C$ - Canadian Dollar)' },
-                { value: 'INR', label: 'INR (₹ - Indian Rupee)' }
+                { value: 'CAD', label: 'CAD (C$ - Canadian Dollar)' }
               ]}
             />
           </div>
