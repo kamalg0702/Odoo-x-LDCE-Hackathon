@@ -39,7 +39,7 @@
   --cta-bg: var(--ink);
   --cta-border: transparent;
 
-  /* FIXED: Define theme-scoped shadow variables */
+  /* FIXED: Define theme-scoped shadow variables in atlas theme */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
@@ -83,7 +83,7 @@
   --cta-bg: #1E293B;
   --cta-border: #334155;
 
-  /* FIXED: Dark theme shadow overrides */
+  /* FIXED: Define theme-scoped shadow variables in midnight theme */
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 4px 8px -2px rgba(0, 0, 0, 0.4);
@@ -127,7 +127,7 @@
   --cta-bg: #064E3B;
   --cta-border: transparent;
 
-  /* FIXED: Define theme-scoped shadow variables */
+  /* FIXED: Define theme-scoped shadow variables in emerald theme */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
@@ -171,7 +171,7 @@
   --cta-bg: #0F172A;
   --cta-border: transparent;
 
-  /* FIXED: Define theme-scoped shadow variables */
+  /* FIXED: Define theme-scoped shadow variables in nordic theme */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
@@ -215,7 +215,7 @@
   --cta-bg: #431407;
   --cta-border: transparent;
 
-  /* FIXED: Define theme-scoped shadow variables */
+  /* FIXED: Define theme-scoped shadow variables in sunset theme */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
@@ -259,7 +259,7 @@
   --cta-bg: #111827;
   --cta-border: #1F2937;
 
-  /* FIXED: Cyberpunk colored shadow overrides */
+  /* FIXED: Define theme-scoped shadow variables in cyberpunk theme */
   --shadow-sm: 0 1px 3px 0 rgba(168, 85, 247, 0.15);
   --shadow-md: 0 4px 12px -2px rgba(168, 85, 247, 0.2), 0 2px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 12px 24px -4px rgba(168, 85, 247, 0.25), 0 4px 8px -2px rgba(0, 0, 0, 0.5);
@@ -281,6 +281,7 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* FIXED: Removed --shadow-* from :root to prevent cascade overwriting theme definitions */
 }
 
 /* Global Reset */
@@ -341,7 +342,6 @@ input, select, textarea {
 }
 
 /* Atlas Background Grid Pattern */
-/* FIXED: Use var(--pattern-dot, var(--mist-dark)) to ensure visibility across all dark and light themes */
 .atlas-bg-pattern {
   background-color: var(--paper);
   background-image: radial-gradient(var(--pattern-dot, var(--mist-dark)) 1px, transparent 1px);

@@ -27,16 +27,14 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchTrips().then(async (userTrips) => {
       if (userTrips && userTrips.length > 0) {
-        // Fetch stops for each trip to render route lines
+        // FIXED: Replaced sequential loop with Promise.all parallel fetch to eliminate N+1 latency
+        const stopResults = await Promise.all(
+          userTrips.map((t) => stopsApi.getStops(t.id).catch(() => ({ data: { stops: [] } })))
+        );
         const stopMap = {};
-        for (const t of userTrips) {
-          try {
-            const res = await stopsApi.getStops(t.id);
-            stopMap[t.id] = res.data.stops || [];
-          } catch {
-            stopMap[t.id] = [];
-          }
-        }
+        userTrips.forEach((t, idx) => {
+          stopMap[t.id] = stopResults[idx]?.data?.stops || [];
+        });
         setTripStopsMap(stopMap);
       }
     });
