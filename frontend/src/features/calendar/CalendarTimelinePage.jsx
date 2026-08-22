@@ -111,7 +111,8 @@ export default function CalendarTimelinePage() {
       </div>
 
       {/* Stop Transit Ribbon Overview */}
-      <Card padding="md" style={{ marginBottom: '28px', backgroundColor: '#FFFFFF' }}>
+      {/* FIXED: hardcoded white → var(--paper-card) */}
+      <Card padding="md" style={{ marginBottom: '28px', backgroundColor: 'var(--paper-card)' }}>
         <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700', color: 'var(--ink-muted)', marginBottom: '12px' }}>
           Destination Stay Durations
         </div>
@@ -204,7 +205,8 @@ export default function CalendarTimelinePage() {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           padding: '10px 14px',
-                          backgroundColor: act.is_completed ? 'var(--paper)' : '#FFFFFF',
+                          // FIXED: hardcoded white → var(--paper-card)
+                          backgroundColor: act.is_completed ? 'var(--paper)' : 'var(--paper-card)',
                           borderRadius: 'var(--radius-md)',
                           border: '1px solid var(--mist)'
                         }}
