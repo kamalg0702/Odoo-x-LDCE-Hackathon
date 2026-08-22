@@ -1,3 +1,8 @@
+# NOTE: Admin module intentionally imports models from other
+# modules for read-only analytics aggregation only.
+# No write operations are performed here.
+# This is an accepted architectural exception for admin views.
+
 from ..auth.models import User
 from ..trips.models import Trip
 from ..stops.models import Stop

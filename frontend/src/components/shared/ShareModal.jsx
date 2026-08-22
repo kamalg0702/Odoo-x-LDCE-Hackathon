@@ -60,7 +60,8 @@ export function ShareModal({
                   padding: '10px 12px',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--mist-dark)',
-                  backgroundColor: '#FFFFFF',
+                  // FIXED: hardcoded white → var(--paper-card)
+                  backgroundColor: 'var(--paper-card)',
                   fontFamily: 'var(--font-data)',
                   fontSize: '13px',
                   color: 'var(--ink)'

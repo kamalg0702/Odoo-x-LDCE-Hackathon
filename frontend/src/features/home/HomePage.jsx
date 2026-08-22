@@ -21,7 +21,6 @@ import {
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { useUIStore, THEMES } from '../../core/store/ui.store';
 
 const CITIES_PREVIEW = [
   { name: 'Tokyo', country: 'Japan', cost: '₹14,500/day', image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600' },
@@ -32,7 +31,6 @@ const CITIES_PREVIEW = [
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { theme, setTheme } = useUIStore();
   const [activeSimulatorCity, setActiveSimulatorCity] = useState(0);
 
   const containerVariants = {
@@ -50,60 +48,7 @@ export default function HomePage() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--paper)', overflowX: 'hidden' }}>
-      {/* Top Header */}
-      <header className="glass-header" style={{ position: 'sticky', top: 0, zIndex: 100, height: '56px', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
-            <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF' }}>
-              <Compass size={18} className="route-dash-animated" style={{ color: '#FFFFFF' }} />
-            </div>
-            <div>
-              <span className="font-display" style={{ fontSize: '18px', fontWeight: '800', color: 'var(--ink)' }}>GlobeTrotter</span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* Quick Theme Switcher */}
-            <select
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-              style={{
-                padding: '4px 8px',
-                borderRadius: 'var(--radius-md)',
-                fontSize: '12px',
-                fontWeight: '600',
-                border: '1px solid var(--card-border)',
-                backgroundColor: 'var(--paper-card)',
-                color: 'var(--ink)',
-                cursor: 'pointer'
-              }}
-              title="Switch Visual Theme"
-            >
-              {THEMES.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.icon} {t.name}
-                </option>
-              ))}
-            </select>
-
-            <button
-              onClick={() => navigate('/auth/login')}
-              style={{ fontSize: '13px', fontWeight: '600', color: 'var(--ink)', padding: '6px 12px' }}
-            >
-              Sign In
-            </button>
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() => navigate('/auth/register')}
-            >
-              Start Free
-            </Button>
-          </div>
-
-        </div>
-      </header>
+      {/* FIXED: Removed duplicate custom header navbar as global Navbar in router handles it */}
 
       {/* Hero Section */}
       <section style={{ position: 'relative', padding: '70px 20px 60px', overflow: 'hidden' }} className="atlas-bg-pattern">
@@ -202,11 +147,12 @@ export default function HomePage() {
                     style={{ cursor: 'pointer' }}
                     onClick={() => setActiveSimulatorCity(pt.index)}
                   >
+                    {/* FIXED: SVG city dots use var(--paper-card) instead of #FFFFFF for dark theme compatibility */}
                     <circle
                       cx={pt.x}
                       cy={pt.y}
                       r={activeSimulatorCity === pt.index ? '8' : '5'}
-                      fill={activeSimulatorCity === pt.index ? 'var(--traverse)' : '#FFFFFF'}
+                      fill={activeSimulatorCity === pt.index ? 'var(--traverse)' : 'var(--paper-card)'}
                       stroke="var(--traverse)"
                       strokeWidth="2"
                     />

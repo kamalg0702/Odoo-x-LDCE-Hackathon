@@ -18,7 +18,8 @@ export function EmptyState({
         justifyContent: 'center',
         padding: '48px 24px',
         textAlign: 'center',
-        backgroundColor: '#FFFFFF',
+        // FIXED: hardcoded white → var(--paper-card)
+        backgroundColor: 'var(--paper-card)',
         borderRadius: 'var(--radius-xl)',
         border: '1px dashed var(--mist-dark)',
         maxWidth: '500px',

@@ -17,7 +17,8 @@ export function CitySearchBar({
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
-        backgroundColor: '#FFFFFF',
+        // FIXED: hardcoded white → var(--paper-card)
+        backgroundColor: 'var(--paper-card)',
         padding: '20px',
         borderRadius: 'var(--radius-xl)',
         border: '1px solid var(--mist)',
@@ -46,7 +47,9 @@ export function CitySearchBar({
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--mist-dark)',
                 fontSize: '13px',
-                backgroundColor: '#FFFFFF'
+                // FIXED: hardcoded white → var(--paper-card)
+                backgroundColor: 'var(--paper-card)',
+                color: 'var(--ink)'
               }}
             >
               <option value="">Any Cost Index</option>
