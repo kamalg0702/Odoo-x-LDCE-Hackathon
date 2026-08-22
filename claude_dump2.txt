@@ -1,0 +1,1191 @@
+==== FILE: frontend/vite.config.js ====
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 5173,
+    // FIXED: Ensure API proxy to http://127.0.0.1:5000 is configured for axios /api calls
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:5000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
+})
+
+==== END: frontend/vite.config.js ====
+
+==== FILE: backend/app/__init__.py ====
+from flask import Flask
+from .core.config import Config
+from .core.extensions import db, jwt, cors, ma
+from .core.middleware import register_error_handlers
+
+# Import Blueprints
+from .modules.auth.routes import auth_bp
+from .modules.trips.routes import trips_bp
+from .modules.stops.routes import stops_bp
+from .modules.cities.routes import cities_bp
+from .modules.activities.routes import activities_bp
+from .modules.budget.routes import budget_bp
+from .modules.share.routes import share_bp
+from .modules.admin.routes import admin_bp
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    # Initialize extensions
+    db.init_app(app)
+    jwt.init_app(app)
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    ma.init_app(app)
+
+    # Register error handlers
+    register_error_handlers(app)
+
+    # Register all module blueprints
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(trips_bp)
+    app.register_blueprint(stops_bp)
+    app.register_blueprint(cities_bp)
+    app.register_blueprint(activities_bp)
+    app.register_blueprint(budget_bp)
+    app.register_blueprint(share_bp)
+    app.register_blueprint(admin_bp)
+
+    @app.route("/api/health", methods=["GET"])
+    def health_check():
+        return {"status": "healthy", "service": "GlobeTrotter API"}
+
+    return app
+
+==== END: backend/app/__init__.py ====
+
+==== FILE: backend/app/core/database.py ====
+from datetime import datetime
+from .extensions import db
+
+class BaseModel(db.Model):
+    __abstract__ = True
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+==== END: backend/app/core/database.py ====
+
+==== FILE: backend/app/core/middleware.py ====
+from functools import wraps
+from flask import jsonify
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+from marshmallow import ValidationError
+
+def api_response(data=None, error=None, status_code=200, success=None):
+    if success is None:
+        success = error is None and status_code < 400
+    
+    return jsonify({
+        "success": success,
+        "data": data if data is not None else {},
+        "error": str(error) if error is not None else None
+    }), status_code
+
+def register_error_handlers(app):
+    @app.errorhandler(ValidationError)
+    def handle_validation_error(e):
+        return api_response(error=e.messages, status_code=400)
+
+    @app.errorhandler(400)
+    def bad_request(e):
+        return api_response(error=getattr(e, "description", "Bad request"), status_code=400)
+
+    @app.errorhandler(401)
+    def unauthorized(e):
+        return api_response(error="Unauthorized access", status_code=401)
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        return api_response(error="Forbidden", status_code=403)
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return api_response(error="Resource not found", status_code=404)
+
+    @app.errorhandler(500)
+    def server_error(e):
+        return api_response(error="Internal server error", status_code=500)
+
+def admin_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            user_id = get_jwt_identity()
+            # Dynamic lookup to respect no cross-module model import rules
+            from ..modules.auth.models import User
+            user = User.query.get(user_id)
+            if not user or user.role != "admin":
+                return api_response(error="Admin privileges required", status_code=403)
+            return fn(*args, **kwargs)
+        return decorator
+    return wrapper
+
+==== END: backend/app/core/middleware.py ====
+
+==== FILE: backend/app/modules/stops/models.py ====
+from ...core.database import BaseModel
+from ...core.extensions import db
+
+class Stop(BaseModel):
+    __tablename__ = "stops"
+
+    trip_id = db.Column(db.Integer, nullable=False, index=True)
+    city_id = db.Column(db.Integer, nullable=False, index=True)
+    arrival_date = db.Column(db.Date, nullable=False)
+    departure_date = db.Column(db.Date, nullable=False)
+    order_index = db.Column(db.Integer, default=0, nullable=False)
+    notes = db.Column(db.Text, nullable=True)
+    transport_mode = db.Column(db.String(50), default="Flight", nullable=True) # Flight, Train, Bus, Drive, Ferry
+    budget_estimate = db.Column(db.Float, default=0.0, nullable=False)
+
+==== END: backend/app/modules/stops/models.py ====
+
+==== FILE: backend/app/modules/activities/models.py ====
+from ...core.database import BaseModel
+from ...core.extensions import db
+
+class Activity(BaseModel):
+    __tablename__ = "activities"
+
+    name = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    category = db.Column(db.String(50), nullable=False, default="Sightseeing") # Culture, Food, Adventure, Sightseeing, Nature, Nightlife
+    cost = db.Column(db.Float, nullable=False, default=0.0)
+    duration_hours = db.Column(db.Float, nullable=False, default=2.0)
+    city_id = db.Column(db.Integer, nullable=False, index=True)
+    image_url = db.Column(db.String(500), nullable=True)
+    rating = db.Column(db.Float, default=4.5, nullable=False)
+
+class StopActivity(BaseModel):
+    __tablename__ = "stop_activities"
+
+    stop_id = db.Column(db.Integer, nullable=False, index=True)
+    activity_id = db.Column(db.Integer, nullable=False, index=True)
+    scheduled_date = db.Column(db.Date, nullable=True)
+    scheduled_time = db.Column(db.String(10), nullable=True) # e.g. "10:00"
+    custom_cost = db.Column(db.Float, nullable=True)
+    notes = db.Column(db.Text, nullable=True)
+    is_completed = db.Column(db.Boolean, default=False, nullable=False)
+
+==== END: backend/app/modules/activities/models.py ====
+
+==== FILE: backend/app/modules/activities/service.py ====
+from sqlalchemy import or_
+from app.core.extensions import db
+from .models import Activity, StopActivity
+
+def list_activities(city_id=None, category=None, min_cost=None, max_cost=None, search=None, limit=100):
+    q = Activity.query
+    if city_id:
+        q = q.filter_by(city_id=city_id)
+    if category and category != "All":
+        q = q.filter(Activity.category.ilike(f"%{category.strip()}%"))
+    if min_cost is not None:
+        try:
+            q = q.filter(Activity.cost >= float(min_cost))
+        except ValueError:
+            pass
+    if max_cost is not None:
+        try:
+            q = q.filter(Activity.cost <= float(max_cost))
+        except ValueError:
+            pass
+    if search:
+        term = f"%{search.strip()}%"
+        q = q.filter(or_(Activity.name.ilike(term), Activity.description.ilike(term)))
+
+    return q.order_by(Activity.rating.desc(), Activity.name.asc()).limit(limit).all()
+
+def get_activity_by_id(activity_id):
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    return db.session.get(Activity, activity_id)
+
+def create_activity(data):
+    activity = Activity(
+        name=data["name"].strip(),
+        description=data.get("description"),
+        category=data.get("category", "Sightseeing"),
+        cost=float(data.get("cost", 0.0)),
+        duration_hours=float(data.get("duration_hours", 2.0)),
+        city_id=int(data["city_id"]),
+        image_url=data.get("image_url"),
+        rating=float(data.get("rating", 4.5))
+    )
+    activity.save()
+    return activity, None
+
+def get_activities_for_stop(stop_id):
+    stop_activities = StopActivity.query.filter_by(stop_id=stop_id).order_by(StopActivity.scheduled_date.asc(), StopActivity.scheduled_time.asc()).all()
+    enriched = []
+    for sa in stop_activities:
+        # FIXED: Replaced deprecated Query.get() with db.session.get()
+        act = db.session.get(Activity, sa.activity_id)
+        act_dict = None
+        if act:
+            act_dict = {
+                "id": act.id,
+                "name": act.name,
+                "description": act.description,
+                "category": act.category,
+                "cost": act.cost,
+                "duration_hours": act.duration_hours,
+                "city_id": act.city_id,
+                "image_url": act.image_url,
+                "rating": act.rating
+            }
+        enriched.append({
+            "id": sa.id,
+            "stop_id": sa.stop_id,
+            "activity_id": sa.activity_id,
+            "scheduled_date": sa.scheduled_date,
+            "scheduled_time": sa.scheduled_time,
+            "custom_cost": sa.custom_cost,
+            "effective_cost": sa.custom_cost if sa.custom_cost is not None else (act.cost if act else 0.0),
+            "notes": sa.notes,
+            "is_completed": sa.is_completed,
+            "activity": act_dict,
+            "created_at": sa.created_at
+        })
+    return enriched
+
+def add_activity_to_stop(stop_id, data):
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    activity = db.session.get(Activity, data["activity_id"])
+    if not activity:
+        return None, "Activity not found"
+
+    stop_act = StopActivity(
+        stop_id=stop_id,
+        activity_id=data["activity_id"],
+        scheduled_date=data.get("scheduled_date"),
+        scheduled_time=data.get("scheduled_time"),
+        custom_cost=data.get("custom_cost"),
+        notes=data.get("notes")
+    )
+    stop_act.save()
+    return stop_act, None
+
+def update_stop_activity(stop_activity_id, data):
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    sa = db.session.get(StopActivity, stop_activity_id)
+    if not sa:
+        return None, "Scheduled activity not found"
+    
+    if "scheduled_date" in data:
+        sa.scheduled_date = data["scheduled_date"]
+    if "scheduled_time" in data:
+        sa.scheduled_time = data["scheduled_time"]
+    if "custom_cost" in data:
+        sa.custom_cost = data["custom_cost"]
+    if "notes" in data:
+        sa.notes = data["notes"]
+    if "is_completed" in data:
+        sa.is_completed = bool(data["is_completed"])
+
+    sa.save()
+    return sa, None
+
+def delete_stop_activity(stop_activity_id, stop_id=None):
+    q = StopActivity.query.filter_by(id=stop_activity_id)
+    if stop_id:
+        q = q.filter_by(stop_id=stop_id)
+    sa = q.first()
+    if not sa:
+        return False, "Scheduled activity not found"
+    sa.delete()
+    return True, None
+
+==== END: backend/app/modules/activities/service.py ====
+
+==== FILE: backend/app/modules/budget/models.py ====
+from ...core.database import BaseModel
+from ...core.extensions import db
+
+class Expense(BaseModel):
+    __tablename__ = "expenses"
+
+    trip_id = db.Column(db.Integer, nullable=False, index=True)
+    stop_id = db.Column(db.Integer, nullable=True, index=True) # Optional link to a specific stop
+    category = db.Column(db.String(50), nullable=False) # transport, stay, activities, meals, other
+    amount = db.Column(db.Float, nullable=False)
+    label = db.Column(db.String(150), nullable=False)
+    date = db.Column(db.Date, nullable=True)
+
+==== END: backend/app/modules/budget/models.py ====
+
+==== FILE: backend/app/modules/share/models.py ====
+import secrets
+from datetime import datetime
+from ...core.database import BaseModel
+from ...core.extensions import db
+
+class SharedLink(BaseModel):
+    __tablename__ = "shared_links"
+
+    trip_id = db.Column(db.Integer, nullable=False, index=True)
+    slug = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    views_count = db.Column(db.Integer, default=0, nullable=False)
+    last_viewed_at = db.Column(db.DateTime, nullable=True)
+
+    @classmethod
+    def generate_unique_slug(cls):
+        while True:
+            slug = secrets.token_urlsafe(8)
+            if not cls.query.filter_by(slug=slug).first():
+                return slug
+
+==== END: backend/app/modules/share/models.py ====
+
+==== FILE: backend/app/modules/admin/routes.py ====
+from flask import Blueprint, request
+from ...core.middleware import api_response, admin_required
+from ..auth.service import list_all_users, update_user_role
+from .service import get_admin_dashboard_stats
+
+admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
+
+@admin_bp.route("/stats", methods=["GET"])
+@admin_required()
+def get_stats():
+    stats = get_admin_dashboard_stats()
+    return api_response(data={"stats": stats})
+
+@admin_bp.route("/users", methods=["GET"])
+@admin_required()
+def get_users_list():
+    users = list_all_users()
+    users_data = [
+        {
+            "id": u.id,
+            "name": u.name,
+            "email": u.email,
+            "role": u.role,
+            "avatar_url": u.avatar_url,
+            "bio": u.bio,
+            "preferred_currency": u.preferred_currency,
+            "created_at": u.created_at.isoformat()
+        }
+        for u in users
+    ]
+    return api_response(data={"users": users_data})
+
+@admin_bp.route("/users/<int:user_id>/role", methods=["PATCH"])
+@admin_required()
+def change_role(user_id):
+    data = request.get_json() or {}
+    role = data.get("role")
+    user, error = update_user_role(user_id, role)
+    if error:
+        return api_response(error=error, status_code=400)
+    return api_response(data={"user": {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role
+    }})
+
+==== END: backend/app/modules/admin/routes.py ====
+
+==== FILE: backend/app/modules/admin/service.py ====
+from ..auth.models import User
+from ..trips.models import Trip
+from ..stops.models import Stop
+from ..cities.models import City
+from ..activities.models import Activity
+
+def get_admin_dashboard_stats():
+    total_users = User.query.count()
+    total_trips = Trip.query.count()
+    total_stops = Stop.query.count()
+    total_cities = City.query.count()
+    total_activities = Activity.query.count()
+
+    recent_users = User.query.order_by(User.created_at.desc()).limit(10).all()
+    recent_trips = Trip.query.order_by(Trip.created_at.desc()).limit(10).all()
+
+    # Popular cities (by popularity score and stop frequency)
+    popular_cities = City.query.order_by(City.popularity_score.desc()).limit(8).all()
+
+    return {
+        "metrics": {
+            "total_users": total_users,
+            "total_trips": total_trips,
+            "total_stops": total_stops,
+            "total_cities": total_cities,
+            "total_activities": total_activities
+        },
+        "recent_users": [
+            {
+                "id": u.id,
+                "name": u.name,
+                "email": u.email,
+                "role": u.role,
+                "avatar_url": u.avatar_url,
+                "created_at": u.created_at.isoformat()
+            }
+            for u in recent_users
+        ],
+        "recent_trips": [
+            {
+                "id": t.id,
+                "user_id": t.user_id,
+                "name": t.name,
+                "start_date": t.start_date.isoformat(),
+                "end_date": t.end_date.isoformat(),
+                "status": t.status,
+                "is_public": t.is_public,
+                "created_at": t.created_at.isoformat()
+            }
+            for t in recent_trips
+        ],
+        "popular_cities": [
+            {
+                "id": c.id,
+                "name": c.name,
+                "country": c.country,
+                "region": c.region,
+                "popularity_score": c.popularity_score,
+                "cost_index": c.cost_index,
+                "image_url": c.image_url
+            }
+            for c in popular_cities
+        ]
+    }
+
+==== END: backend/app/modules/admin/service.py ====
+
+==== FILE: backend/test_api.py ====
+import json
+from app import create_app
+from app.core.extensions import db
+
+def test_api():
+    app = create_app()
+    client = app.test_client()
+
+    print("=== Testing Refined Backend API Endpoints & Google Auth ===")
+
+    # 1. Health check
+    res = client.get("/api/health")
+    assert res.status_code == 200
+    print("[PASS] GET /api/health")
+
+    # 2. Login with email
+    res = client.post("/api/auth/login", json={
+        "email": "traveler@globetrotter.io",
+        "password": "Traveler123!"
+    })
+    assert res.status_code == 200
+    body = res.get_json()
+    access_token = body["data"]["access_token"]
+    headers = {"Authorization": f"Bearer {access_token}"}
+    print("[PASS] POST /api/auth/login")
+
+    # 3. Google OAuth Login Endpoint
+    res = client.post("/api/auth/google", json={
+        "email": "rohan.explorer@gmail.com",
+        "name": "Rohan Explorer",
+        "avatar_url": "https://api.dicebear.com/7.x/bottts/svg?seed=rohan"
+    })
+    assert res.status_code == 200
+    google_body = res.get_json()
+    assert google_body["data"]["user"]["email"] == "rohan.explorer@gmail.com"
+    print("[PASS] POST /api/auth/google (Google OAuth User Created and Authenticated)")
+
+    # 4. Search cities
+    res = client.get("/api/cities?q=Paris")
+    assert res.status_code == 200
+    cities = res.get_json()["data"]["cities"]
+    assert len(cities) > 0 and cities[0]["currency"] == "INR"
+    print(f"[PASS] GET /api/cities (Verified INR currency: avg_daily_cost INR {cities[0]['avg_daily_cost']})")
+
+    # 5. List user trips & check INR budget
+    res = client.get("/api/trips", headers=headers)
+    assert res.status_code == 200
+    trips = res.get_json()["data"]["trips"]
+    assert len(trips) > 0
+    trip_id = trips[0]["id"]
+    print(f"[PASS] GET /api/trips (Trip budget: INR {trips[0]['total_budget']})")
+
+    # 6. Get budget in INR
+    res = client.get(f"/api/trips/{trip_id}/budget", headers=headers)
+    assert res.status_code == 200
+    budget = res.get_json()["data"]["budget"]
+    assert budget["total"] > 100000 # Realistic INR total
+    print(f"[PASS] GET /api/trips/{trip_id}/budget (INR Total Spent: INR {budget['total']})")
+
+    # 7. Share trip and test public access
+    res = client.post(f"/api/trips/{trip_id}/share", headers=headers)
+    assert res.status_code == 200
+    slug = res.get_json()["data"]["slug"]
+    res = client.get(f"/api/share/{slug}")
+    assert res.status_code == 200
+    print(f"[PASS] GET /api/share/{slug} (Public unauthenticated access verified!)")
+
+    # 8. Admin Gating check
+    res = client.get("/api/admin/stats", headers=headers)
+    assert res.status_code == 403
+    print("[PASS] Role gating: standard user cannot access /api/admin/stats (403)")
+
+    print("\nALL REFINED API CONTRACT & GOOGLE AUTH TESTS PASSED PERFECTLY!")
+
+if __name__ == "__main__":
+    test_api()
+
+==== END: backend/test_api.py ====
+
+==== FILE: frontend/src/core/hooks/useAuth.js ====
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/auth.store';
+import { useUIStore } from '../store/ui.store';
+import { authApi } from '../api/auth.api';
+
+export function useAuth() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, isLoading, error, setUser, setAuthData, logout: storeLogout, setLoading, setError } = useAuthStore();
+  const { showToast } = useUIStore();
+
+  const login = useCallback(async (email, password) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await authApi.login({ email, password });
+      const { user, access_token, refresh_token } = res.data;
+      setAuthData(user, access_token, refresh_token);
+      showToast(`Welcome back, ${user.name}!`, 'success');
+      navigate('/dashboard');
+      return user;
+    } catch (err) {
+      const message = err.error || 'Failed to login. Please check your credentials.';
+      setError(message);
+      showToast(message, 'error');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setAuthData, setLoading, setError, showToast]);
+
+  const register = useCallback(async (name, email, password, avatar_url) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await authApi.register({ name, email, password, avatar_url });
+      const { user, access_token, refresh_token } = res.data;
+      setAuthData(user, access_token, refresh_token);
+      showToast(`Account created! Welcome to GlobeTrotter, ${user.name}.`, 'success');
+      navigate('/dashboard');
+      return user;
+    } catch (err) {
+      const message = err.error || 'Registration failed. Please try again.';
+      setError(message);
+      showToast(message, 'error');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setAuthData, setLoading, setError, showToast]);
+
+  const loginWithGoogle = useCallback(async (email, name, avatar_url) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await authApi.googleAuth({ email, name, avatar_url });
+      const { user, access_token, refresh_token } = res.data;
+      setAuthData(user, access_token, refresh_token);
+      showToast(`Signed in with Google as ${user.name}!`, 'success');
+      navigate('/dashboard');
+      return user;
+    } catch (err) {
+      const message = err.error || 'Google authentication failed.';
+      setError(message);
+      showToast(message, 'error');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, setAuthData, setLoading, setError, showToast]);
+
+  const logout = useCallback(async () => {
+    try {
+      await authApi.logout();
+    } catch {
+      // Ignore API logout error
+    } finally {
+      storeLogout();
+      showToast('You have been logged out.', 'info');
+      navigate('/auth/login');
+    }
+  }, [navigate, storeLogout, showToast]);
+
+  const updateProfile = useCallback(async (data) => {
+    setLoading(true);
+    try {
+      const res = await authApi.updateProfile(data);
+      const updated = res.data.user;
+      setUser(updated);
+      showToast('Profile updated successfully.', 'success');
+      return updated;
+    } catch (err) {
+      const message = err.error || 'Failed to update profile';
+      showToast(message, 'error');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [setUser, setLoading, showToast]);
+
+  return {
+    user,
+    isAuthenticated,
+    isAdmin: user?.role === 'admin',
+    isLoading,
+    error,
+    login,
+    register,
+    loginWithGoogle,
+    logout,
+    updateProfile
+  };
+}
+
+==== END: frontend/src/core/hooks/useAuth.js ====
+
+==== FILE: frontend/src/features/dashboard/DashboardPage.jsx ====
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Compass, Plus, MapPin, Calendar, DollarSign, TrendingUp, Sparkles, ArrowRight, ShieldAlert } from 'lucide-react';
+import { useAuth } from '../../core/hooks/useAuth';
+import { useTrip } from '../../core/hooks/useTrip';
+import { useCities } from '../../core/hooks/useCities';
+import { PageWrapper } from '../../components/layout/PageWrapper';
+import { TripCard } from '../../components/shared/TripCard';
+import { ShareModal } from '../../components/shared/ShareModal';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { formatCurrency } from '../../core/utils/currency';
+import { shareApi } from '../../core/api/share.api';
+import { stopsApi } from '../../core/api/stops.api';
+
+export default function DashboardPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { trips, fetchTrips, isLoading } = useTrip();
+  const { cities, fetchCities } = useCities();
+
+  const [tripStopsMap, setTripStopsMap] = useState({});
+  const [selectedShareTrip, setSelectedShareTrip] = useState(null);
+  const [shareData, setShareData] = useState(null);
+
+  useEffect(() => {
+    fetchTrips().then(async (userTrips) => {
+      if (userTrips && userTrips.length > 0) {
+        // Fetch stops for each trip to render route lines
+        const stopMap = {};
+        for (const t of userTrips) {
+          try {
+            const res = await stopsApi.getStops(t.id);
+            stopMap[t.id] = res.data.stops || [];
+          } catch {
+            stopMap[t.id] = [];
+          }
+        }
+        setTripStopsMap(stopMap);
+      }
+    });
+    fetchCities({ limit: 6 });
+  }, [fetchTrips, fetchCities]);
+
+  const handleShareClick = async (trip) => {
+    setSelectedShareTrip(trip);
+    try {
+      const res = await shareApi.shareTrip(trip.id);
+      setShareData(res.data);
+    } catch {
+      setShareData({ slug: trip.share_slug });
+    }
+  };
+
+  // Metrics computation
+  const totalTripsCount = trips.length;
+  const totalBudgetAccumulated = trips.reduce((acc, t) => acc + (t.total_budget || 0), 0);
+  const totalStopsCount = Object.values(tripStopsMap).reduce((acc, stops) => acc + stops.length, 0);
+
+  return (
+    <PageWrapper>
+      {/* Hero Welcome Banner */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '20px',
+          backgroundColor: '#FFFFFF',
+          padding: '28px 32px',
+          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--mist)',
+          boxShadow: 'var(--shadow-sm)',
+          marginBottom: '32px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--traverse)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              Travel Dashboard
+            </span>
+            <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--mist-dark)' }} />
+            <span style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>Overview</span>
+          </div>
+          <h1 className="font-display" style={{ fontSize: '30px', fontWeight: '800', color: 'var(--ink)', letterSpacing: '-0.5px' }}>
+            Welcome, {user?.name || 'Explorer'}!
+          </h1>
+          <p style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '4px', maxWidth: '540px' }}>
+            You have <strong style={{ color: 'var(--ink)' }}>{totalTripsCount}</strong> active journeys planned across <strong style={{ color: 'var(--ink)' }}>{totalStopsCount}</strong> global destinations.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '12px', position: 'relative', zIndex: 2 }}>
+          <Button
+            variant="primary"
+            size="lg"
+            icon={Plus}
+            onClick={() => navigate('/trips/new')}
+          >
+            Plan New Journey
+          </Button>
+        </div>
+      </div>
+
+      {/* Metric Cards Row */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '16px',
+          marginBottom: '32px'
+        }}
+      >
+        <Card padding="md" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '46px', height: '46px', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--traverse-light)', color: 'var(--traverse)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Compass size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Itineraries</div>
+            <div className="font-data" style={{ fontSize: '24px', fontWeight: '800', color: 'var(--ink)', marginTop: '2px' }}>{totalTripsCount}</div>
+          </div>
+        </Card>
+
+        <Card padding="md" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '46px', height: '46px', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--terrain-light)', color: 'var(--terrain)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <MapPin size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Destinations</div>
+            <div className="font-data" style={{ fontSize: '24px', fontWeight: '800', color: 'var(--ink)', marginTop: '2px' }}>{totalStopsCount}</div>
+          </div>
+        </Card>
+
+        <Card padding="md" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '46px', height: '46px', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--gold-light)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <DollarSign size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Planned Budget</div>
+            <div className="font-data" style={{ fontSize: '24px', fontWeight: '800', color: 'var(--ink)', marginTop: '2px' }}>{formatCurrency(totalBudgetAccumulated)}</div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Recent Trips Section */}
+      <div style={{ marginBottom: '40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+          <div>
+            <h2 className="font-display" style={{ fontSize: '22px', fontWeight: '800', color: 'var(--ink)' }}>
+              Your Active Itineraries
+            </h2>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>Explore route maps and day-by-day stops.</p>
+          </div>
+          <button
+            onClick={() => navigate('/trips')}
+            style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', fontWeight: '600', color: 'var(--traverse)' }}
+          >
+            <span>View All Trips</span>
+            <ArrowRight size={15} />
+          </button>
+        </div>
+
+        {trips.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+            {trips.slice(0, 3).map((trip) => (
+              <TripCard
+                key={trip.id}
+                trip={trip}
+                stops={tripStopsMap[trip.id] || []}
+                onOpen={(id) => navigate(`/trips/${id}/build`)}
+                onShare={handleShareClick}
+              />
+            ))}
+          </div>
+        ) : (
+          <Card padding="lg" style={{ textAlign: 'center', padding: '40px 20px' }}>
+            <Compass size={36} style={{ color: 'var(--traverse)', margin: '0 auto 12px' }} />
+            <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--ink)' }}>No trips created yet</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', marginTop: '4px', maxWidth: '340px', margin: '4px auto 16px' }}>
+              Begin your adventure by crafting a personalized multi-city itinerary.
+            </p>
+            <Button variant="primary" icon={Plus} onClick={() => navigate('/trips/new')}>
+              Plan Your First Trip
+            </Button>
+          </Card>
+        )}
+      </div>
+
+      {/* Recommended Global Destinations Showcase */}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+          <div>
+            <h2 className="font-display" style={{ fontSize: '22px', fontWeight: '800', color: 'var(--ink)' }}>
+              Curated Destination Highlights
+            </h2>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)' }}>Inspiration from our global catalog of 50+ world destinations.</p>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '18px' }}>
+          {cities.slice(0, 4).map((city) => (
+            <Card
+              key={city.id}
+              padding="none"
+              interactive
+              style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+              onClick={() => navigate('/trips/new')}
+            >
+              <div
+                style={{
+                  height: '140px',
+                  backgroundImage: `url(${city.image_url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  padding: '12px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start'
+                }}
+              >
+                <Badge variant="blue">{city.region}</Badge>
+                <span className="font-data" style={{ fontSize: '12px', fontWeight: '700', backgroundColor: 'rgba(26, 26, 46, 0.8)', color: '#FFFFFF', padding: '3px 8px', borderRadius: 'var(--radius-full)' }}>
+                  ★ {city.popularity_score}
+                </span>
+              </div>
+              <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--ink)' }}>{city.name}</h4>
+                  <span style={{ fontSize: '12px', color: 'var(--ink-muted)' }}>{city.country}</span>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--ink-muted)', lineHeight: '1.4', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {city.description}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px', borderTop: '1px solid var(--mist)', paddingTop: '8px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--ink-subtle)' }}>Avg Daily: <strong style={{ color: 'var(--ink)' }}>${city.avg_daily_cost}</strong></span>
+                  <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--traverse)' }}>Plan with {city.name} →</span>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Share Modal */}
+      {selectedShareTrip && (
+        <ShareModal
+          isOpen={!!selectedShareTrip}
+          onClose={() => setSelectedShareTrip(null)}
+          trip={selectedShareTrip}
+          shareData={shareData}
+          onGenerateLink={() => handleShareClick(selectedShareTrip)}
+        />
+      )}
+    </PageWrapper>
+  );
+}
+
+==== END: frontend/src/features/dashboard/DashboardPage.jsx ====
+
+==== FILE: frontend/src/features/trips/CreateTripPage.jsx ====
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Compass, Calendar, DollarSign, Image, ArrowLeft, Sparkles, Check } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { useTrip } from '../../core/hooks/useTrip';
+import { PageWrapper } from '../../components/layout/PageWrapper';
+import { Card } from '../../components/ui/Card';
+import { Input, Textarea } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { calculateDays, getTodayString, addDays } from '../../core/utils/date';
+
+const PRESET_COVERS = [
+  { label: 'Alpine & Peaks', url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200' },
+  { label: 'Parisian Charm', url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200' },
+  { label: 'Tropical Coast', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200' },
+  { label: 'Tokyo Neon & City', url: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=1200' },
+  { label: 'Mediterranean Blue', url: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1200' },
+  { label: 'Desert Oasis', url: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200' }
+];
+
+export default function CreateTripPage() {
+  const navigate = useNavigate();
+  const { createNewTrip, isLoading } = useTrip();
+
+  const today = getTodayString();
+  const defaultEnd = addDays(today, 7);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    start_date: today,
+    end_date: defaultEnd,
+    total_budget: '',
+    cover_photo_url: PRESET_COVERS[0].url,
+    is_public: false
+  });
+
+  const [dateError, setDateError] = useState('');
+
+  const days = calculateDays(formData.start_date, formData.end_date);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.start_date > formData.end_date) {
+      setDateError('End date cannot be earlier than start date');
+      return;
+    }
+
+    try {
+      const trip = await createNewTrip({
+        name: formData.name,
+        description: formData.description,
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        total_budget: formData.total_budget ? Number(formData.total_budget) : 0,
+        cover_photo_url: formData.cover_photo_url,
+        is_public: formData.is_public
+      });
+
+      // Celebration confetti
+      try {
+        confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+      } catch {}
+
+      // Navigate to Itinerary Builder
+      navigate(`/trips/${trip.id}/build`);
+    } catch (err) {
+      // Error handled by hook toast
+    }
+  };
+
+  return (
+    <PageWrapper maxWidth="840px">
+      <button
+        onClick={() => navigate('/trips')}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          fontSize: '13px',
+          fontWeight: '600',
+          color: 'var(--ink-muted)',
+          marginBottom: '16px'
+        }}
+      >
+        <ArrowLeft size={16} />
+        <span>Back to My Trips</span>
+      </button>
+
+      <div style={{ marginBottom: '24px' }}>
+        <h1 className="font-display" style={{ fontSize: '28px', fontWeight: '800', color: 'var(--ink)' }}>
+          Create New Journey
+        </h1>
+        <p style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '4px' }}>
+          Set your journey dates, target budget, and cover styling. You'll add multi-city stops and activities next!
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Trip Name */}
+          <Input
+            label="Trip Name"
+            placeholder="e.g. Mediterranean Coast & Tapas Odyssey"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            helperText="Give your expedition a memorable title."
+          />
+
+          {/* Dates & Duration */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+            <Input
+              label="Start Date"
+              type="date"
+              required
+              value={formData.start_date}
+              onChange={(e) => {
+                setDateError('');
+                setFormData({ ...formData, start_date: e.target.value });
+              }}
+            />
+            <Input
+              label="End Date"
+              type="date"
+              required
+              value={formData.end_date}
+              error={dateError}
+              onChange={(e) => {
+                setDateError('');
+                setFormData({ ...formData, end_date: e.target.value });
+              }}
+              helperText={`Total Duration: ${days} ${days === 1 ? 'day' : 'days'}`}
+            />
+          </div>
+
+          {/* Budget & Public Toggle */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+            <Input
+              label="Target Budget (USD, Optional)"
+              type="number"
+              min="0"
+              step="50"
+              icon={DollarSign}
+              placeholder="e.g. 3500"
+              value={formData.total_budget}
+              onChange={(e) => setFormData({ ...formData, total_budget: e.target.value })}
+              helperText="Set an overall spending limit to monitor in real-time."
+            />
+
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px 0' }}>
+                <input
+                  type="checkbox"
+                  checked={formData.is_public}
+                  onChange={(e) => setFormData({ ...formData, is_public: e.target.checked })}
+                  style={{ width: '18px', height: '18px', accentColor: 'var(--traverse)', cursor: 'pointer' }}
+                />
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--ink)' }}>Enable Public Share Link</div>
+                  <div style={{ fontSize: '12px', color: 'var(--ink-muted)' }}>Generate a public link anyone can view.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Trip Description */}
+          <Textarea
+            label="Trip Description / Notes (Optional)"
+            placeholder="Share the goals of this trip, companions, packing reminders, or travel ideas..."
+            rows={3}
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          />
+
+          {/* Cover Photo Selection */}
+          <div>
+            <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--ink)', marginBottom: '8px', display: 'block' }}>
+              Select Cover Artwork
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+              {PRESET_COVERS.map((preset) => {
+                const isSelected = formData.cover_photo_url === preset.url;
+                return (
+                  <div
+                    key={preset.url}
+                    onClick={() => setFormData({ ...formData, cover_photo_url: preset.url })}
+                    style={{
+                      height: '75px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundImage: `url(${preset.url})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      cursor: 'pointer',
+                      border: `2px solid ${isSelected ? 'var(--traverse)' : 'transparent'}`,
+                      boxShadow: isSelected ? '0 0 0 2px var(--traverse-ring)' : 'none',
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'flex-end',
+                      padding: '4px 6px',
+                      transition: 'all var(--transition-fast)'
+                    }}
+                  >
+                    {isSelected && (
+                      <div style={{ position: 'absolute', top: '4px', right: '4px', backgroundColor: 'var(--traverse)', color: '#FFFFFF', borderRadius: '50%', padding: '2px', display: 'flex' }}>
+                        <Check size={10} strokeWidth={3} />
+                      </div>
+                    )}
+                    <span style={{ fontSize: '10px', fontWeight: '700', color: '#FFFFFF', backgroundColor: 'rgba(26, 26, 46, 0.75)', padding: '1px 4px', borderRadius: 'var(--radius-sm)' }}>
+                      {preset.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <Input
+              icon={Image}
+              placeholder="Or paste a custom image URL (Unsplash, etc.)..."
+              value={formData.cover_photo_url}
+              onChange={(e) => setFormData({ ...formData, cover_photo_url: e.target.value })}
+            />
+          </div>
+
+          {/* Submit Actions */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--mist)', paddingTop: '20px' }}>
+            <Button variant="secondary" onClick={() => navigate('/trips')}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              loading={isLoading}
+              icon={Sparkles}
+            >
+              Create Trip & Start Building
+            </Button>
+          </div>
+        </Card>
+      </form>
+    </PageWrapper>
+  );
+}
+
+==== END: frontend/src/features/trips/CreateTripPage.jsx ====
+

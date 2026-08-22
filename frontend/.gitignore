@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#miscelaneous
+*.pdf
+GlobeTrotter.md
+*.sh
+*.txt

@@ -1,4 +1,6 @@
+import secrets
 from flask_jwt_extended import create_access_token, create_refresh_token
+from app.core.extensions import db
 from .models import User
 
 def register_user(name: str, email: str, password: str, avatar_url: str = None, role: str = "user"):
@@ -50,7 +52,8 @@ def authenticate_google_user(email: str, name: str, avatar_url: str = None):
             role="user",
             preferred_currency="INR"
         )
-        user.set_password("GoogleAuthExternalPass_2026!")
+        # FIXED: Replaced static guessable password on auto-created Google accounts with secrets.token_hex(32)
+        user.set_password(secrets.token_hex(32))
         user.save()
 
     access_token = create_access_token(identity=str(user.id))
@@ -62,10 +65,12 @@ def authenticate_google_user(email: str, name: str, avatar_url: str = None):
     }, None
 
 def get_user_by_id(user_id):
-    return User.query.get(user_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    return db.session.get(User, user_id)
 
 def update_user_profile(user_id, data):
-    user = User.query.get(user_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    user = db.session.get(User, user_id)
     if not user:
         return None, "User not found"
 
@@ -87,7 +92,8 @@ def list_all_users():
     return User.query.order_by(User.created_at.desc()).all()
 
 def update_user_role(user_id, role):
-    user = User.query.get(user_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    user = db.session.get(User, user_id)
     if not user:
         return None, "User not found"
     if role not in ["user", "admin"]:

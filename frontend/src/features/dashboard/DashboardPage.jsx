@@ -68,7 +68,8 @@ export default function DashboardPage() {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '20px',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           padding: '28px 32px',
           borderRadius: 'var(--radius-xl)',
           border: '1px solid var(--mist)',
@@ -141,7 +142,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Planned Budget</div>
-            <div className="font-data" style={{ fontSize: '24px', fontWeight: '800', color: 'var(--ink)', marginTop: '2px' }}>{formatCurrency(totalBudgetAccumulated)}</div>
+            <div className="font-data" style={{ fontSize: '24px', fontWeight: '800', color: 'var(--ink)', marginTop: '2px' }}>{formatCurrency(totalBudgetAccumulated, user?.preferred_currency || 'INR')}</div>
           </div>
         </Card>
       </div>
@@ -236,7 +237,8 @@ export default function DashboardPage() {
                   {city.description}
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px', borderTop: '1px solid var(--mist)', paddingTop: '8px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--ink-subtle)' }}>Avg Daily: <strong style={{ color: 'var(--ink)' }}>${city.avg_daily_cost}</strong></span>
+                  {/* FIXED: Replace hardcoded dollar with formatCurrency in INR */}
+                  <span style={{ fontSize: '11px', color: 'var(--ink-subtle)' }}>Avg Daily: <strong style={{ color: 'var(--ink)' }}>{formatCurrency(city.avg_daily_cost, 'INR')}</strong></span>
                   <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--traverse)' }}>Plan with {city.name} →</span>
                 </div>
               </div>

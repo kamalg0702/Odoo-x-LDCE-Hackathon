@@ -84,8 +84,10 @@ SAMPLE_ACTIVITIES_BY_CITY = {
     ]
 }
 
-def seed_database():
-    app = create_app()
+# FIXED: Accept optional app parameter to prevent nested app contexts
+def seed_database(app=None):
+    if app is None:
+        app = create_app()
     with app.app_context():
         print("Recreating database tables with INR currency...")
         db.drop_all()

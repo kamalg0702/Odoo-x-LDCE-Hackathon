@@ -1,4 +1,5 @@
 from sqlalchemy import or_
+from app.core.extensions import db
 from .models import Activity, StopActivity
 
 def list_activities(city_id=None, category=None, min_cost=None, max_cost=None, search=None, limit=100):
@@ -24,7 +25,8 @@ def list_activities(city_id=None, category=None, min_cost=None, max_cost=None, s
     return q.order_by(Activity.rating.desc(), Activity.name.asc()).limit(limit).all()
 
 def get_activity_by_id(activity_id):
-    return Activity.query.get(activity_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    return db.session.get(Activity, activity_id)
 
 def create_activity(data):
     activity = Activity(
@@ -44,7 +46,8 @@ def get_activities_for_stop(stop_id):
     stop_activities = StopActivity.query.filter_by(stop_id=stop_id).order_by(StopActivity.scheduled_date.asc(), StopActivity.scheduled_time.asc()).all()
     enriched = []
     for sa in stop_activities:
-        act = Activity.query.get(sa.activity_id)
+        # FIXED: Replaced deprecated Query.get() with db.session.get()
+        act = db.session.get(Activity, sa.activity_id)
         act_dict = None
         if act:
             act_dict = {
@@ -74,7 +77,8 @@ def get_activities_for_stop(stop_id):
     return enriched
 
 def add_activity_to_stop(stop_id, data):
-    activity = Activity.query.get(data["activity_id"])
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    activity = db.session.get(Activity, data["activity_id"])
     if not activity:
         return None, "Activity not found"
 
@@ -90,7 +94,8 @@ def add_activity_to_stop(stop_id, data):
     return stop_act, None
 
 def update_stop_activity(stop_activity_id, data):
-    sa = StopActivity.query.get(stop_activity_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    sa = db.session.get(StopActivity, stop_activity_id)
     if not sa:
         return None, "Scheduled activity not found"
     

@@ -114,7 +114,8 @@ export default function AdminDashboardPage() {
 
         <Card padding="md">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-md)', backgroundColor: '#F3E8FF', color: '#7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* FIXED: hardcoded purple -> var(--traverse-light) & var(--traverse) */}
+            <div style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--traverse-light)', color: 'var(--traverse)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Activity size={20} />
             </div>
             <div>

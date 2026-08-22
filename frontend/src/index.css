@@ -34,6 +34,16 @@
   --mist-dark: #CBD5E1;
   --card-border: #E2E8F0;
   --glass-bg: rgba(247, 245, 240, 0.88);
+
+  --pattern-dot: var(--mist-dark);
+  --cta-bg: var(--ink);
+  --cta-border: transparent;
+
+  /* FIXED: Define theme-scoped shadow variables */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.18);
 }
 
 /* 2. Theme: Midnight Explorer (Sleek Dark Mode) */
@@ -68,6 +78,16 @@
   --mist-dark: #475569;
   --card-border: #334155;
   --glass-bg: rgba(15, 23, 42, 0.88);
+
+  --pattern-dot: rgba(148, 163, 184, 0.15);
+  --cta-bg: #1E293B;
+  --cta-border: #334155;
+
+  /* FIXED: Dark theme shadow overrides */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 4px 8px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.7);
 }
 
 /* 3. Theme: Emerald Oasis (Lush Forest Nature) */
@@ -102,6 +122,16 @@
   --mist-dark: #A7F3D0;
   --card-border: #D1FAE5;
   --glass-bg: rgba(240, 253, 244, 0.88);
+
+  --pattern-dot: var(--mist-dark);
+  --cta-bg: #064E3B;
+  --cta-border: transparent;
+
+  /* FIXED: Define theme-scoped shadow variables */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.18);
 }
 
 /* 4. Theme: Nordic Frost (Arctic Blue Minimalist) */
@@ -136,6 +166,16 @@
   --mist-dark: #CBD5E1;
   --card-border: #E2E8F0;
   --glass-bg: rgba(248, 250, 252, 0.88);
+
+  --pattern-dot: var(--mist-dark);
+  --cta-bg: #0F172A;
+  --cta-border: transparent;
+
+  /* FIXED: Define theme-scoped shadow variables */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.18);
 }
 
 /* 5. Theme: Sunset Terracotta (Desert Warmth) */
@@ -170,6 +210,16 @@
   --mist-dark: #FDBA74;
   --card-border: #FFEDD5;
   --glass-bg: rgba(255, 247, 237, 0.88);
+
+  --pattern-dot: var(--mist-dark);
+  --cta-bg: #431407;
+  --cta-border: transparent;
+
+  /* FIXED: Define theme-scoped shadow variables */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.18);
 }
 
 /* 6. Theme: Cyberpunk Voyager (Neon Dark) */
@@ -204,9 +254,19 @@
   --mist-dark: #374151;
   --card-border: #1F2937;
   --glass-bg: rgba(9, 13, 22, 0.88);
+
+  --pattern-dot: rgba(168, 85, 247, 0.12);
+  --cta-bg: #111827;
+  --cta-border: #1F2937;
+
+  /* FIXED: Cyberpunk colored shadow overrides */
+  --shadow-sm: 0 1px 3px 0 rgba(168, 85, 247, 0.15);
+  --shadow-md: 0 4px 12px -2px rgba(168, 85, 247, 0.2), 0 2px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 24px -4px rgba(168, 85, 247, 0.25), 0 4px 8px -2px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 32px -6px rgba(168, 85, 247, 0.3);
 }
 
-/* Base Variables */
+/* Base Variables (non-shadow global design tokens) */
 :root {
   --font-display: 'Fraunces', Georgia, serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -217,11 +277,6 @@
   --radius-lg: 16px;
   --radius-xl: 22px;
   --radius-full: 9999px;
-
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.18);
 
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
@@ -286,9 +341,10 @@ input, select, textarea {
 }
 
 /* Atlas Background Grid Pattern */
+/* FIXED: Use var(--pattern-dot, var(--mist-dark)) to ensure visibility across all dark and light themes */
 .atlas-bg-pattern {
   background-color: var(--paper);
-  background-image: radial-gradient(var(--mist-dark) 1px, transparent 1px);
+  background-image: radial-gradient(var(--pattern-dot, var(--mist-dark)) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 

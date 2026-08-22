@@ -58,11 +58,12 @@ export function BudgetCategoryPieChart({ byCategory = {} }) {
           </Pie>
           <Tooltip
             formatter={(value) => [formatCurrency(value), 'Total Spent']}
+            // FIXED: hardcoded ink tooltip -> var(--paper-card) with theme card-border
             contentStyle={{
-              backgroundColor: 'var(--ink)',
-              color: '#FFFFFF',
+              backgroundColor: 'var(--paper-card)',
+              color: 'var(--ink)',
+              border: '1px solid var(--card-border)',
               borderRadius: 'var(--radius-md)',
-              border: 'none',
               fontSize: '12px'
             }}
           />
@@ -98,14 +99,16 @@ export function StopBudgetBarChart({ stops = [] }) {
         <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--mist)" />
           <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--ink-muted)' }} />
-          <YAxis tick={{ fontSize: 11, fill: 'var(--ink-muted)' }} tickFormatter={(val) => `$${val}`} />
+          {/* FIXED: hardcoded $ -> ₹ in YAxis tickFormatter */}
+          <YAxis tick={{ fontSize: 11, fill: 'var(--ink-muted)' }} tickFormatter={(val) => `₹${val}`} />
           <Tooltip
             formatter={(value) => [formatCurrency(value)]}
+            // FIXED: hardcoded ink tooltip -> var(--paper-card) with theme card-border
             contentStyle={{
-              backgroundColor: 'var(--ink)',
-              color: '#FFFFFF',
+              backgroundColor: 'var(--paper-card)',
+              color: 'var(--ink)',
+              border: '1px solid var(--card-border)',
               borderRadius: 'var(--radius-md)',
-              border: 'none',
               fontSize: '12px'
             }}
           />

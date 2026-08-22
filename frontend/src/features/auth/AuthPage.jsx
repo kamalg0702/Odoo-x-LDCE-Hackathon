@@ -83,7 +83,8 @@ export default function AuthPage() {
         style={{
           width: '100%',
           maxWidth: '430px',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           borderRadius: 'var(--radius-xl)',
           padding: '32px 28px',
           boxShadow: 'var(--shadow-xl)',
@@ -132,7 +133,8 @@ export default function AuthPage() {
             justifyContent: 'center',
             gap: '10px',
             padding: '10px 16px',
-            backgroundColor: '#FFFFFF',
+            // FIXED: hardcoded white → var(--paper-card)
+            backgroundColor: 'var(--paper-card)',
             border: '1px solid var(--mist-dark)',
             borderRadius: 'var(--radius-md)',
             color: 'var(--ink)',
@@ -143,7 +145,7 @@ export default function AuthPage() {
             marginBottom: '16px'
           }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--sand)'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFFFF'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--paper-card)'}
         >
           {/* Official Google 'G' SVG Logo */}
           <svg width="18" height="18" viewBox="0 0 24 24">
@@ -182,7 +184,8 @@ export default function AuthPage() {
               fontSize: '13px',
               fontWeight: !isRegister ? '700' : '500',
               borderRadius: 'var(--radius-sm)',
-              backgroundColor: !isRegister ? '#FFFFFF' : 'transparent',
+              // FIXED: hardcoded white → var(--paper-card)
+              backgroundColor: !isRegister ? 'var(--paper-card)' : 'transparent',
               color: !isRegister ? 'var(--ink)' : 'var(--ink-muted)',
               boxShadow: !isRegister ? 'var(--shadow-sm)' : 'none'
             }}
@@ -198,7 +201,8 @@ export default function AuthPage() {
               fontSize: '13px',
               fontWeight: isRegister ? '700' : '500',
               borderRadius: 'var(--radius-sm)',
-              backgroundColor: isRegister ? '#FFFFFF' : 'transparent',
+              // FIXED: hardcoded white → var(--paper-card)
+              backgroundColor: isRegister ? 'var(--paper-card)' : 'transparent',
               color: isRegister ? 'var(--ink)' : 'var(--ink-muted)',
               boxShadow: isRegister ? 'var(--shadow-sm)' : 'none'
             }}

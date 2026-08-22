@@ -14,7 +14,8 @@ import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { Input, Textarea, Select } from '../../components/ui/Input';
 import { addDays, getTodayString } from '../../core/utils/date';
-import { getCostLevel } from '../../core/utils/currency';
+// FIXED: Import formatCurrency to display INR currency
+import { getCostLevel, formatCurrency } from '../../core/utils/currency';
 import { shareApi } from '../../core/api/share.api';
 
 export default function CitySearchPage() {
@@ -210,8 +211,9 @@ export default function CitySearchPage() {
                     <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--ink-subtle)', fontWeight: '600' }}>
                       Cost: <span style={{ color: 'var(--ink)', fontWeight: '700' }}>{costInfo.dots} ({costInfo.label})</span>
                     </div>
+                    {/* FIXED: hardcoded $ -> formatCurrency in INR */}
                     <div className="font-data" style={{ fontSize: '13px', fontWeight: '700', color: 'var(--ink)' }}>
-                      ~${city.avg_daily_cost}/day
+                      ~{formatCurrency(city.avg_daily_cost, 'INR')}/day
                     </div>
                   </div>
 
@@ -270,7 +272,7 @@ export default function CitySearchPage() {
               ]}
             />
             <Input
-              label="Budget Allocation ($)"
+              label="Budget Allocation (₹)"
               type="number"
               min="0"
               value={addFormData.budget_estimate}

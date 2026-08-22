@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Compass, Calendar, DollarSign, Image, ArrowLeft, Sparkles, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTrip } from '../../core/hooks/useTrip';
+// FIXED: Import useAuth to read user's preferred currency
+import { useAuth } from '../../core/hooks/useAuth';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { Card } from '../../components/ui/Card';
 import { Input, Textarea } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { calculateDays, getTodayString, addDays } from '../../core/utils/date';
+import { formatCurrency } from '../../core/utils/currency';
 
 const PRESET_COVERS = [
   { label: 'Alpine & Peaks', url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200' },
@@ -21,6 +24,9 @@ const PRESET_COVERS = [
 export default function CreateTripPage() {
   const navigate = useNavigate();
   const { createNewTrip, isLoading } = useTrip();
+  // FIXED: Read user's preferred currency from auth context
+  const { user } = useAuth();
+  const userCurrency = user?.preferred_currency || 'INR';
 
   const today = getTodayString();
   const defaultEnd = addDays(today, 7);
@@ -136,16 +142,17 @@ export default function CreateTripPage() {
 
           {/* Budget & Public Toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+            {/* FIXED: Removed hardcoded USD from label and added dynamic currency helperText */}
             <Input
-              label="Target Budget (USD, Optional)"
+              label="Target Budget (Optional)"
               type="number"
               min="0"
-              step="50"
+              step="500"
               icon={DollarSign}
-              placeholder="e.g. 3500"
+              placeholder={userCurrency === 'INR' ? 'e.g. 150000' : 'e.g. 3500'}
               value={formData.total_budget}
               onChange={(e) => setFormData({ ...formData, total_budget: e.target.value })}
-              helperText="Set an overall spending limit to monitor in real-time."
+              helperText={`Set an overall spending limit in ${userCurrency} (${formatCurrency(0, userCurrency).slice(0, 1)}) to monitor in real-time.`}
             />
 
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

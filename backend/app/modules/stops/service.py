@@ -1,3 +1,4 @@
+from app.core.extensions import db
 from ..cities.service import get_city_by_id
 from ..trips.service import get_trip_by_id
 from .models import Stop
@@ -44,6 +45,10 @@ def get_stops_for_trip(trip_id, user_id=None):
         enriched.append(stop_dict)
 
     return enriched, None
+
+def get_stop_by_id(stop_id):
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    return db.session.get(Stop, stop_id)
 
 def create_stop(trip_id, user_id, data):
     trip = get_trip_by_id(trip_id, user_id)

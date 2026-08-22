@@ -92,7 +92,8 @@ function SortableStopItem({
         style={{
           display: 'flex',
           overflow: 'hidden',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           border: isDragging ? '2px solid var(--traverse)' : '1px solid var(--mist)',
           boxShadow: isDragging ? 'var(--shadow-xl)' : 'var(--shadow-sm)'
         }}
@@ -426,7 +427,7 @@ export default function ItineraryBuilderPage() {
               ]}
             />
             <Input
-              label="Budget Allocation ($)"
+              label="Budget Allocation (₹)"
               type="number"
               min="0"
               value={editFormData.budget_estimate || ''}

@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+# FIXED: Load environment variables from .env before any other imports
+load_dotenv()
+
 import os
 from app import create_app
 from seeds import seed_database
@@ -13,7 +17,8 @@ if __name__ == "__main__":
         from app.modules.auth.models import User
         if not User.query.first():
             print("No users found. Running initial database seeds...")
-            seed_database()
+            # FIXED: Pass existing app instance to prevent nested app contexts
+            seed_database(app)
 
     port = int(os.getenv("PORT", 5000))
     debug = os.getenv("FLASK_DEBUG", "True").lower() in ["true", "1"]

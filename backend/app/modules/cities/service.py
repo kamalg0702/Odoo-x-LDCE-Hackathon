@@ -1,4 +1,5 @@
 from sqlalchemy import or_
+from app.core.extensions import db
 from .models import City
 
 def search_cities(query=None, country=None, region=None, max_cost=None, limit=100):
@@ -19,7 +20,8 @@ def search_cities(query=None, country=None, region=None, max_cost=None, limit=10
     return q.order_by(City.popularity_score.desc(), City.name.asc()).limit(limit).all()
 
 def get_city_by_id(city_id):
-    return City.query.get(city_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    return db.session.get(City, city_id)
 
 def create_city(data):
     city = City(
@@ -39,7 +41,8 @@ def create_city(data):
     return city, None
 
 def update_city(city_id, data):
-    city = City.query.get(city_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    city = db.session.get(City, city_id)
     if not city:
         return None, "City not found"
     for field in ["name", "country", "region", "cost_index", "popularity_score", "lat", "lng", "image_url", "description", "currency", "avg_daily_cost"]:
@@ -49,7 +52,8 @@ def update_city(city_id, data):
     return city, None
 
 def delete_city(city_id):
-    city = City.query.get(city_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    city = db.session.get(City, city_id)
     if not city:
         return False, "City not found"
     city.delete()

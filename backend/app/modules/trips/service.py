@@ -1,3 +1,4 @@
+from app.core.extensions import db
 from .models import Trip
 
 def list_user_trips(user_id):
@@ -22,7 +23,8 @@ def create_trip(user_id, data):
     return trip, None
 
 def get_trip_by_id(trip_id, user_id=None):
-    trip = Trip.query.get(trip_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    trip = db.session.get(Trip, trip_id)
     if not trip:
         return None
     if user_id is not None and trip.user_id != user_id:

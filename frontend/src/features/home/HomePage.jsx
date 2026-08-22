@@ -298,7 +298,8 @@ export default function HomePage() {
           </Card>
 
           <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: '#F3E8FF', color: '#7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* FIXED: Replaced hardcoded purple with theme-adaptive traverse-light and traverse tokens */}
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--traverse-light)', color: 'var(--traverse)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Globe2 size={22} />
             </div>
             <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>50+ Preloaded World Cities</h3>
@@ -331,9 +332,11 @@ export default function HomePage() {
 
       {/* CTA Footer Banner */}
       <section style={{ padding: '60px 20px 80px', maxWidth: '1000px', margin: '0 auto' }}>
+        {/* FIXED: Use theme cta variables to prevent white-on-white text in dark themes */}
         <div
           style={{
-            backgroundColor: 'var(--ink)',
+            backgroundColor: 'var(--cta-bg)',
+            border: '1px solid var(--cta-border)',
             color: '#FFFFFF',
             borderRadius: 'var(--radius-xl)',
             padding: '48px 36px',

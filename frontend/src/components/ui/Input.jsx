@@ -35,7 +35,8 @@ export function Input({
             width: '100%',
             padding: Icon ? '10px 12px 10px 38px' : '10px 12px',
             fontSize: '14px',
-            backgroundColor: '#FFFFFF',
+            // FIXED: hardcoded white → var(--paper-card)
+            backgroundColor: 'var(--paper-card)',
             border: `1px solid ${error ? 'var(--alert)' : 'var(--mist-dark)'}`,
             borderRadius: 'var(--radius-md)',
             color: 'var(--ink)',
@@ -87,7 +88,8 @@ export function Textarea({
           width: '100%',
           padding: '10px 12px',
           fontSize: '14px',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           border: `1px solid ${error ? 'var(--alert)' : 'var(--mist-dark)'}`,
           borderRadius: 'var(--radius-md)',
           color: 'var(--ink)',
@@ -138,7 +140,8 @@ export function Select({
           width: '100%',
           padding: '10px 12px',
           fontSize: '14px',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           border: `1px solid ${error ? 'var(--alert)' : 'var(--mist-dark)'}`,
           borderRadius: 'var(--radius-md)',
           color: 'var(--ink)',

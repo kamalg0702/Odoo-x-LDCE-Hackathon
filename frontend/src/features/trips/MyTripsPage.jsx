@@ -99,7 +99,8 @@ export default function MyTripsPage() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '16px',
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           padding: '16px 20px',
           borderRadius: 'var(--radius-xl)',
           border: '1px solid var(--mist)',

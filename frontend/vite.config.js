@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    // FIXED: Ensure API proxy to http://127.0.0.1:5000 is configured for axios /api calls
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:5000',

@@ -1,8 +1,10 @@
 from datetime import datetime
+from app.core.extensions import db
 from ..trips.service import get_trip_by_id, get_trip_by_slug
 from ..stops.service import get_stops_for_trip
 from ..activities.service import get_activities_for_stop
-from ..auth.models import User
+# FIXED: Replaced cross-module User model import with auth.service.get_user_by_id
+from ..auth.service import get_user_by_id
 from .models import SharedLink
 
 def create_or_get_share_link(trip_id, user_id):
@@ -44,7 +46,8 @@ def get_public_trip_by_slug(slug):
         link.save()
 
     # Author
-    author = User.query.get(trip.user_id)
+    # FIXED: Replaced direct cross-module User.query.get with get_user_by_id service call
+    author = get_user_by_id(trip.user_id)
     author_data = {
         "name": author.name if author else "Traveler",
         "avatar_url": author.avatar_url if author else None

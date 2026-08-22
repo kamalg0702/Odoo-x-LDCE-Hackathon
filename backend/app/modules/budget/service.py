@@ -1,4 +1,5 @@
 from datetime import date
+from app.core.extensions import db
 from ..trips.service import get_trip_by_id
 from ..stops.models import Stop
 from ..activities.models import StopActivity, Activity
@@ -24,7 +25,8 @@ def calculate_trip_budget(trip_id, user_id=None):
         for sa in stop_activities:
             cost = sa.custom_cost
             if cost is None:
-                act = Activity.query.get(sa.activity_id)
+                # FIXED: Replaced deprecated Query.get() with db.session.get()
+                act = db.session.get(Activity, sa.activity_id)
                 cost = act.cost if act else 0.0
             
             activity_costs += cost
@@ -62,7 +64,8 @@ def calculate_trip_budget(trip_id, user_id=None):
     # Per-stop breakdowns
     stop_breakdowns = []
     for s in stops:
-        city = City.query.get(s.city_id)
+        # FIXED: Replaced deprecated Query.get() with db.session.get()
+        city = db.session.get(City, s.city_id)
         subtotal = round(stop_activity_totals.get(s.id, 0.0) + stop_expense_totals.get(s.id, 0.0), 2)
         is_over = s.budget_estimate > 0 and subtotal > s.budget_estimate
         stop_breakdowns.append({
@@ -121,7 +124,8 @@ def add_expense(trip_id, user_id, data):
     return expense, None
 
 def delete_expense(expense_id, user_id):
-    expense = Expense.query.get(expense_id)
+    # FIXED: Replaced deprecated Query.get() with db.session.get()
+    expense = db.session.get(Expense, expense_id)
     if not expense:
         return False, "Expense not found"
 

@@ -141,7 +141,8 @@ export default function PublicShareViewPage() {
         </div>
 
         {/* Route Map Preview */}
-        <Card padding="md" style={{ marginBottom: '32px', backgroundColor: '#FFFFFF' }}>
+        {/* FIXED: hardcoded white → var(--paper-card) */}
+        <Card padding="md" style={{ marginBottom: '32px', backgroundColor: 'var(--paper-card)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <Compass size={18} style={{ color: 'var(--traverse)' }} />
             <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--ink)' }}>
@@ -247,14 +248,15 @@ export default function PublicShareViewPage() {
         </div>
 
         {/* Bottom CTA Card */}
+        {/* FIXED: hardcoded ink -> var(--cta-bg) & var(--cta-border) */}
         <Card
           padding="lg"
           style={{
             marginTop: '48px',
             textAlign: 'center',
-            backgroundColor: 'var(--ink)',
+            backgroundColor: 'var(--cta-bg)',
             color: '#FFFFFF',
-            border: 'none',
+            border: '1px solid var(--cta-border)',
             boxShadow: 'var(--shadow-xl)'
           }}
         >

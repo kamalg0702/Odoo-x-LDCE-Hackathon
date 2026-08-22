@@ -2,6 +2,8 @@ from functools import wraps
 from flask import jsonify
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from marshmallow import ValidationError
+# FIXED: Import db from extensions to support db.session.get
+from app.core.extensions import db
 
 def api_response(data=None, error=None, status_code=200, success=None):
     if success is None:
@@ -46,7 +48,8 @@ def admin_required():
             user_id = get_jwt_identity()
             # Dynamic lookup to respect no cross-module model import rules
             from ..modules.auth.models import User
-            user = User.query.get(user_id)
+            # FIXED: Replaced deprecated User.query.get(user_id) with db.session.get(User, user_id)
+            user = db.session.get(User, user_id)
             if not user or user.role != "admin":
                 return api_response(error="Admin privileges required", status_code=403)
             return fn(*args, **kwargs)

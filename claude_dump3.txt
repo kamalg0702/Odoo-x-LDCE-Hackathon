@@ -1,0 +1,1149 @@
+==== FILE: frontend/src/index.css ====
+/* ==========================================================================
+   GLOBETROTTER DESIGN SYSTEM: Dynamic Multi-Theme Engine
+   ========================================================================== */
+
+/* 1. Theme: Atlas Classic (Default Warm Cartography) */
+:root, [data-theme="atlas"] {
+  --ink: #1A1A2E;
+  --ink-light: #2D314E;
+  --ink-muted: #5A6275;
+  --ink-subtle: #8E97A8;
+  
+  --paper: #F7F5F0;
+  --paper-card: #FFFFFF;
+  --sand: #EFECE6;
+  --sand-dark: #E2DDD3;
+  
+  --traverse: #2563EB;
+  --traverse-hover: #1D4ED8;
+  --traverse-light: #EFF6FF;
+  --traverse-ring: rgba(37, 99, 235, 0.2);
+
+  --terrain: #059669;
+  --terrain-hover: #047857;
+  --terrain-light: #ECFDF5;
+
+  --alert: #DC2626;
+  --alert-hover: #B91C1C;
+  --alert-light: #FEF2F2;
+
+  --gold: #D97706;
+  --gold-light: #FFFBEB;
+
+  --mist: #E2E8F0;
+  --mist-dark: #CBD5E1;
+  --card-border: #E2E8F0;
+  --glass-bg: rgba(247, 245, 240, 0.88);
+}
+
+/* 2. Theme: Midnight Explorer (Sleek Dark Mode) */
+[data-theme="midnight"] {
+  --ink: #F1F5F9;
+  --ink-light: #E2E8F0;
+  --ink-muted: #94A3B8;
+  --ink-subtle: #64748B;
+  
+  --paper: #0F172A;
+  --paper-card: #1E293B;
+  --sand: #334155;
+  --sand-dark: #475569;
+  
+  --traverse: #38BDF8;
+  --traverse-hover: #0EA5E9;
+  --traverse-light: rgba(56, 189, 248, 0.15);
+  --traverse-ring: rgba(56, 189, 248, 0.25);
+
+  --terrain: #10B981;
+  --terrain-hover: #059669;
+  --terrain-light: rgba(16, 185, 129, 0.15);
+
+  --alert: #F87171;
+  --alert-hover: #EF4444;
+  --alert-light: rgba(239, 68, 68, 0.15);
+
+  --gold: #FBBF24;
+  --gold-light: rgba(251, 191, 36, 0.15);
+
+  --mist: #334155;
+  --mist-dark: #475569;
+  --card-border: #334155;
+  --glass-bg: rgba(15, 23, 42, 0.88);
+}
+
+/* 3. Theme: Emerald Oasis (Lush Forest Nature) */
+[data-theme="emerald"] {
+  --ink: #064E3B;
+  --ink-light: #065F46;
+  --ink-muted: #047857;
+  --ink-subtle: #6EE7B7;
+  
+  --paper: #F0FDF4;
+  --paper-card: #FFFFFF;
+  --sand: #DCFCE7;
+  --sand-dark: #BBF7D0;
+  
+  --traverse: #059669;
+  --traverse-hover: #047857;
+  --traverse-light: #ECFDF5;
+  --traverse-ring: rgba(5, 150, 105, 0.2);
+
+  --terrain: #16A34A;
+  --terrain-hover: #15803D;
+  --terrain-light: #DCFCE7;
+
+  --alert: #E11D48;
+  --alert-hover: #BE123C;
+  --alert-light: #FFE4E6;
+
+  --gold: #CA8A04;
+  --gold-light: #FEF9C3;
+
+  --mist: #D1FAE5;
+  --mist-dark: #A7F3D0;
+  --card-border: #D1FAE5;
+  --glass-bg: rgba(240, 253, 244, 0.88);
+}
+
+/* 4. Theme: Nordic Frost (Arctic Blue Minimalist) */
+[data-theme="nordic"] {
+  --ink: #0F172A;
+  --ink-light: #1E293B;
+  --ink-muted: #475569;
+  --ink-subtle: #94A3B8;
+  
+  --paper: #F8FAFC;
+  --paper-card: #FFFFFF;
+  --sand: #E2E8F0;
+  --sand-dark: #CBD5E1;
+  
+  --traverse: #0284C7;
+  --traverse-hover: #0369A1;
+  --traverse-light: #E0F2FE;
+  --traverse-ring: rgba(2, 132, 199, 0.2);
+
+  --terrain: #0D9488;
+  --terrain-hover: #0F766E;
+  --terrain-light: #CCFBF1;
+
+  --alert: #E11D48;
+  --alert-hover: #BE123C;
+  --alert-light: #FFE4E6;
+
+  --gold: #D97706;
+  --gold-light: #FEF3C7;
+
+  --mist: #E2E8F0;
+  --mist-dark: #CBD5E1;
+  --card-border: #E2E8F0;
+  --glass-bg: rgba(248, 250, 252, 0.88);
+}
+
+/* 5. Theme: Sunset Terracotta (Desert Warmth) */
+[data-theme="sunset"] {
+  --ink: #431407;
+  --ink-light: #7C2D12;
+  --ink-muted: #9A3412;
+  --ink-subtle: #FDBA74;
+  
+  --paper: #FFF7ED;
+  --paper-card: #FFFFFF;
+  --sand: #FFEDD5;
+  --sand-dark: #FED7AA;
+  
+  --traverse: #EA580C;
+  --traverse-hover: #C2410C;
+  --traverse-light: #FFEDD5;
+  --traverse-ring: rgba(234, 88, 12, 0.2);
+
+  --terrain: #15803D;
+  --terrain-hover: #166534;
+  --terrain-light: #DCFCE7;
+
+  --alert: #DC2626;
+  --alert-hover: #B91C1C;
+  --alert-light: #FEE2E2;
+
+  --gold: #D97706;
+  --gold-light: #FEF3C7;
+
+  --mist: #FED7AA;
+  --mist-dark: #FDBA74;
+  --card-border: #FFEDD5;
+  --glass-bg: rgba(255, 247, 237, 0.88);
+}
+
+/* 6. Theme: Cyberpunk Voyager (Neon Dark) */
+[data-theme="cyberpunk"] {
+  --ink: #F8FAFC;
+  --ink-light: #E2E8F0;
+  --ink-muted: #A5B4FC;
+  --ink-subtle: #818CF8;
+  
+  --paper: #090D16;
+  --paper-card: #111827;
+  --sand: #1F2937;
+  --sand-dark: #374151;
+  
+  --traverse: #A855F7;
+  --traverse-hover: #9333EA;
+  --traverse-light: rgba(168, 85, 247, 0.15);
+  --traverse-ring: rgba(168, 85, 247, 0.25);
+
+  --terrain: #06B6D4;
+  --terrain-hover: #0891B2;
+  --terrain-light: rgba(6, 182, 212, 0.15);
+
+  --alert: #F43F5E;
+  --alert-hover: #E11D48;
+  --alert-light: rgba(244, 63, 94, 0.15);
+
+  --gold: #F59E0B;
+  --gold-light: rgba(245, 158, 11, 0.15);
+
+  --mist: #1F2937;
+  --mist-dark: #374151;
+  --card-border: #1F2937;
+  --glass-bg: rgba(9, 13, 22, 0.88);
+}
+
+/* Base Variables */
+:root {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-data: 'JetBrains Mono', monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 32px -6px rgba(0, 0, 0, 0.18);
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-data {
+  font-family: var(--font-data);
+}
+
+a {
+  color: var(--traverse);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sand-dark);
+  border-radius: var(--radius-full);
+}
+
+/* Atlas Background Grid Pattern */
+.atlas-bg-pattern {
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--mist-dark) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Card Surface Base */
+.card-base {
+  background: var(--paper-card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--traverse);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.badge-blue {
+  background-color: var(--traverse-light);
+  color: var(--traverse);
+  border: 1px solid var(--traverse-ring);
+}
+.badge-green {
+  background-color: var(--terrain-light);
+  color: var(--terrain);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.badge-red {
+  background-color: var(--alert-light);
+  color: var(--alert);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.badge-gold {
+  background-color: var(--gold-light);
+  color: var(--gold);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.badge-gray {
+  background-color: var(--sand);
+  color: var(--ink-muted);
+  border: 1px solid var(--sand-dark);
+}
+
+/* Animated Route Line */
+@keyframes dashTravel {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+.route-dash-animated {
+  stroke-dasharray: 6 3;
+  animation: dashTravel 1.8s linear infinite;
+}
+
+.glass-header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--mist);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+==== END: frontend/src/index.css ====
+
+==== FILE: frontend/src/App.css ====
+.counter {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  margin-bottom: 24px;
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.hero {
+  position: relative;
+
+  .base,
+  .framework,
+  .vite {
+    inset-inline: 0;
+    margin: 0 auto;
+  }
+
+  .base {
+    width: 170px;
+    position: relative;
+    z-index: 0;
+  }
+
+  .framework,
+  .vite {
+    position: absolute;
+  }
+
+  .framework {
+    z-index: 1;
+    top: 34px;
+    height: 28px;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
+      scale(1.4);
+  }
+
+  .vite {
+    z-index: 0;
+    top: 107px;
+    height: 26px;
+    width: auto;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
+      scale(0.8);
+  }
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  place-content: center;
+  place-items: center;
+  flex-grow: 1;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 24px;
+    gap: 18px;
+  }
+}
+
+#next-steps {
+  display: flex;
+  border-top: 1px solid var(--border);
+  text-align: left;
+
+  & > div {
+    flex: 1 1 0;
+    padding: 32px;
+    @media (max-width: 1024px) {
+      padding: 24px 20px;
+    }
+  }
+
+  .icon {
+    margin-bottom: 16px;
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+#docs {
+  border-right: 1px solid var(--border);
+
+  @media (max-width: 1024px) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+#next-steps ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  margin: 32px 0 0;
+
+  .logo {
+    height: 18px;
+  }
+
+  a {
+    color: var(--text-h);
+    font-size: 16px;
+    border-radius: 6px;
+    background: var(--social-bg);
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: var(--shadow);
+    }
+    .button-icon {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    li {
+      flex: 1 1 calc(50% - 8px);
+    }
+
+    a {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+}
+
+#spacer {
+  height: 88px;
+  border-top: 1px solid var(--border);
+  @media (max-width: 1024px) {
+    height: 48px;
+  }
+}
+
+.ticks {
+  position: relative;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -4.5px;
+    border: 5px solid transparent;
+  }
+
+  &::before {
+    left: 0;
+    border-left-color: var(--border);
+  }
+  &::after {
+    right: 0;
+    border-right-color: var(--border);
+  }
+}
+
+==== END: frontend/src/App.css ====
+
+==== FILE: frontend/src/main.jsx ====
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import AppRouter from './router/index'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AppRouter />
+    </BrowserRouter>
+  </React.StrictMode>
+)
+
+==== END: frontend/src/main.jsx ====
+
+==== FILE: frontend/src/App.jsx ====
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import heroImg from './assets/hero.png'
+import './App.css'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+      <section id="center">
+        <div className="hero">
+          <img src={heroImg} className="base" width="170" height="179" alt="" />
+          <img src={reactLogo} className="framework" alt="React logo" />
+          <img src={viteLogo} className="vite" alt="Vite logo" />
+        </div>
+        <div>
+          <h1>Get started</h1>
+          <p>
+            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+          </p>
+        </div>
+        <button
+          type="button"
+          className="counter"
+          onClick={() => setCount((count) => count + 1)}
+        >
+          Count is {count}
+        </button>
+      </section>
+
+      <div className="ticks"></div>
+
+      <section id="next-steps">
+        <div id="docs">
+          <svg className="icon" role="presentation" aria-hidden="true">
+            <use href="/icons.svg#documentation-icon"></use>
+          </svg>
+          <h2>Documentation</h2>
+          <p>Your questions, answered</p>
+          <ul>
+            <li>
+              <a href="https://vite.dev/" target="_blank">
+                <img className="logo" src={viteLogo} alt="" />
+                Explore Vite
+              </a>
+            </li>
+            <li>
+              <a href="https://react.dev/" target="_blank">
+                <img className="button-icon" src={reactLogo} alt="" />
+                Learn more
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div id="social">
+          <svg className="icon" role="presentation" aria-hidden="true">
+            <use href="/icons.svg#social-icon"></use>
+          </svg>
+          <h2>Connect with us</h2>
+          <p>Join the Vite community</p>
+          <ul>
+            <li>
+              <a href="https://github.com/vitejs/vite" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#github-icon"></use>
+                </svg>
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a href="https://chat.vite.dev/" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#discord-icon"></use>
+                </svg>
+                Discord
+              </a>
+            </li>
+            <li>
+              <a href="https://x.com/vite_js" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#x-icon"></use>
+                </svg>
+                X.com
+              </a>
+            </li>
+            <li>
+              <a href="https://bsky.app/profile/vite.dev" target="_blank">
+                <svg
+                  className="button-icon"
+                  role="presentation"
+                  aria-hidden="true"
+                >
+                  <use href="/icons.svg#bluesky-icon"></use>
+                </svg>
+                Bluesky
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <div className="ticks"></div>
+      <section id="spacer"></section>
+    </>
+  )
+}
+
+export default App
+
+==== END: frontend/src/App.jsx ====
+
+==== FILE: frontend/src/components/ui/Card/Card.jsx ====
+[NOT FOUND]
+==== END: frontend/src/components/ui/Card/Card.jsx ====
+
+==== FILE: frontend/src/components/ui/Button/Button.jsx ====
+[NOT FOUND]
+==== END: frontend/src/components/ui/Button/Button.jsx ====
+
+==== FILE: frontend/src/components/ui/Input/Input.jsx ====
+[NOT FOUND]
+==== END: frontend/src/components/ui/Input/Input.jsx ====
+
+==== FILE: frontend/src/components/layout/Navbar/Navbar.jsx ====
+[NOT FOUND]
+==== END: frontend/src/components/layout/Navbar/Navbar.jsx ====
+
+==== FILE: frontend/src/components/layout/Sidebar/Sidebar.jsx ====
+[NOT FOUND]
+==== END: frontend/src/components/layout/Sidebar/Sidebar.jsx ====
+
+==== FILE: frontend/src/components/layout/PageWrapper/PageWrapper.jsx ====
+[NOT FOUND]
+==== END: frontend/src/components/layout/PageWrapper/PageWrapper.jsx ====
+
+==== FILE: frontend/src/core/utils/currency.js ====
+/**
+ * Currency utility helpers for GlobeTrotter (INR Default)
+ */
+
+const CURRENCY_SYMBOLS = {
+  INR: '₹',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  JPY: '¥',
+  AUD: 'A$',
+  CAD: 'C$',
+  CHF: 'CHF '
+};
+
+export function formatCurrency(amount, currency = 'INR') {
+  if (amount === undefined || amount === null || isNaN(amount)) return '₹0';
+  const symbol = CURRENCY_SYMBOLS[currency.toUpperCase()] || '₹';
+  
+  // Format with Indian Rupee numbering format
+  return `${symbol}${Number(amount).toLocaleString('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+export function getCostLevel(costIndex) {
+  if (!costIndex) return { label: 'Moderate', color: 'blue', dots: '₹₹' };
+  if (costIndex <= 3) return { label: 'Budget Friendly', color: 'green', dots: '₹' };
+  if (costIndex <= 6) return { label: 'Moderate', color: 'blue', dots: '₹₹' };
+  if (costIndex <= 8) return { label: 'Upscale', color: 'gold', dots: '₹₹₹' };
+  return { label: 'Luxury', color: 'red', dots: '₹₹₹₹' };
+}
+
+==== END: frontend/src/core/utils/currency.js ====
+
+==== FILE: frontend/src/features/home/HomePage.jsx ====
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {
+  Compass,
+  MapPin,
+  Calendar,
+  DollarSign,
+  Share2,
+  Layers,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Globe2,
+  TrendingUp,
+  Sliders,
+  Plane,
+  Heart
+} from 'lucide-react';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { Card } from '../../components/ui/Card';
+import { useUIStore, THEMES } from '../../core/store/ui.store';
+
+const CITIES_PREVIEW = [
+  { name: 'Tokyo', country: 'Japan', cost: '₹14,500/day', image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600' },
+  { name: 'Paris', country: 'France', cost: '₹16,000/day', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600' },
+  { name: 'Rome', country: 'Italy', cost: '₹13,500/day', image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600' },
+  { name: 'Bali', country: 'Indonesia', cost: '₹5,500/day', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600' }
+];
+
+export default function HomePage() {
+  const navigate = useNavigate();
+  const { theme, setTheme } = useUIStore();
+  const [activeSimulatorCity, setActiveSimulatorCity] = useState(0);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.12 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--paper)', overflowX: 'hidden' }}>
+      {/* Top Header */}
+      <header className="glass-header" style={{ position: 'sticky', top: 0, zIndex: 100, height: '56px', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+            <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF' }}>
+              <Compass size={18} className="route-dash-animated" style={{ color: '#FFFFFF' }} />
+            </div>
+            <div>
+              <span className="font-display" style={{ fontSize: '18px', fontWeight: '800', color: 'var(--ink)' }}>GlobeTrotter</span>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Quick Theme Switcher */}
+            <select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              style={{
+                padding: '4px 8px',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '12px',
+                fontWeight: '600',
+                border: '1px solid var(--card-border)',
+                backgroundColor: 'var(--paper-card)',
+                color: 'var(--ink)',
+                cursor: 'pointer'
+              }}
+              title="Switch Visual Theme"
+            >
+              {THEMES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.icon} {t.name}
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={() => navigate('/auth/login')}
+              style={{ fontSize: '13px', fontWeight: '600', color: 'var(--ink)', padding: '6px 12px' }}
+            >
+              Sign In
+            </button>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => navigate('/auth/register')}
+            >
+              Start Free
+            </Button>
+          </div>
+
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section style={{ position: 'relative', padding: '70px 20px 60px', overflow: 'hidden' }} className="atlas-bg-pattern">
+        <motion.div
+          style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div variants={itemVariants} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: 'var(--traverse-light)', border: '1px solid var(--traverse-ring)', color: 'var(--traverse)', padding: '4px 14px', borderRadius: 'var(--radius-full)', fontSize: '12px', fontWeight: '700', marginBottom: '20px' }}>
+            <Sparkles size={14} />
+            <span>THE MULTI-CITY ATLAS ENGINE</span>
+          </motion.div>
+
+          <motion.h1
+            className="font-display"
+            variants={itemVariants}
+            style={{ fontSize: 'clamp(32px, 5vw, 54px)', fontWeight: '800', lineHeight: '1.15', color: 'var(--ink)', letterSpacing: '-1px', maxWidth: '820px', margin: '0 auto' }}
+          >
+            Design Multi-City Journeys with <span style={{ color: 'var(--traverse)' }}>Unmatched Precision</span>.
+          </motion.h1>
+
+          <motion.p
+            variants={itemVariants}
+            style={{ fontSize: '16px', color: 'var(--ink-muted)', maxWidth: '620px', margin: '18px auto 32px', lineHeight: '1.6' }}
+          >
+            Plan complex routes, drag-to-reorder destination stops, calculate automatic INR budgets, and share interactive live blueprints with zero friction.
+          </motion.p>
+
+          <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            <Button
+              size="lg"
+              variant="primary"
+              icon={ArrowRight}
+              iconPosition="right"
+              onClick={() => navigate('/auth/register')}
+            >
+              Build Your Itinerary Free
+            </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              icon={Compass}
+              onClick={() => navigate('/auth/login')}
+            >
+              Try Demo Accounts
+            </Button>
+          </motion.div>
+
+          {/* Interactive Route Blueprint Preview Card */}
+          <motion.div
+            variants={itemVariants}
+            style={{
+              marginTop: '48px',
+              backgroundColor: 'var(--paper-card)',
+              borderRadius: 'var(--radius-xl)',
+              padding: '24px',
+              border: '1px solid var(--card-border)',
+              boxShadow: 'var(--shadow-xl)',
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <Badge variant="blue">LIVE BLUEPRINT SIMULATION</Badge>
+                <h3 className="font-display" style={{ fontSize: '20px', fontWeight: '800', color: 'var(--ink)', marginTop: '4px' }}>
+                  Grand Eurasian Odyssey (14 Days)
+                </h3>
+              </div>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <span className="font-data" style={{ fontSize: '14px', fontWeight: '700', color: 'var(--terrain)', backgroundColor: 'var(--terrain-light)', padding: '4px 10px', borderRadius: 'var(--radius-md)' }}>
+                  Total: ₹2,45,000
+                </span>
+              </div>
+            </div>
+
+            {/* Interactive SVG Path with Animation */}
+            <div style={{ height: '80px', margin: '10px 0 20px', position: 'relative' }}>
+              <svg viewBox="0 0 400 60" style={{ width: '100%', height: '100%' }}>
+                <path
+                  d="M 40 30 C 120 10, 180 50, 240 20 C 300 -10, 340 45, 370 30"
+                  fill="none"
+                  stroke="var(--traverse)"
+                  strokeWidth="2.5"
+                  strokeDasharray="6 3"
+                  className="route-dash-animated"
+                />
+                {[
+                  { x: 40, y: 30, name: 'Paris', index: 0 },
+                  { x: 150, y: 36, name: 'Rome', index: 1 },
+                  { x: 260, y: 15, name: 'Dubai', index: 2 },
+                  { x: 370, y: 30, name: 'Tokyo', index: 3 }
+                ].map((pt) => (
+                  <g
+                    key={pt.name}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setActiveSimulatorCity(pt.index)}
+                  >
+                    <circle
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={activeSimulatorCity === pt.index ? '8' : '5'}
+                      fill={activeSimulatorCity === pt.index ? 'var(--traverse)' : '#FFFFFF'}
+                      stroke="var(--traverse)"
+                      strokeWidth="2"
+                    />
+                    <text
+                      x={pt.x}
+                      y={pt.y > 30 ? pt.y + 16 : pt.y - 10}
+                      textAnchor="middle"
+                      fill="var(--ink)"
+                      fontSize="9"
+                      fontWeight="700"
+                    >
+                      {pt.name}
+                    </text>
+                  </g>
+                ))}
+              </svg>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+              {CITIES_PREVIEW.map((c, idx) => (
+                <div
+                  key={c.name}
+                  onClick={() => setActiveSimulatorCity(idx)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
+                    border: `1px solid ${activeSimulatorCity === idx ? 'var(--traverse)' : 'var(--card-border)'}`,
+                    backgroundColor: activeSimulatorCity === idx ? 'var(--traverse-light)' : 'transparent',
+                    cursor: 'pointer',
+                    transition: 'all var(--transition-fast)'
+                  }}
+                >
+                  <img src={c.image} alt={c.name} style={{ width: '38px', height: '38px', borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--ink)' }}>{idx + 1}. {c.name}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--ink-muted)' }}>Avg {c.cost}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Feature Showcase Grid */}
+      <section style={{ padding: '60px 20px', maxWidth: '1100px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '44px' }}>
+          <Badge variant="blue">POWERFUL CAPABILITIES</Badge>
+          <h2 className="font-display" style={{ fontSize: '32px', fontWeight: '800', color: 'var(--ink)', marginTop: '8px' }}>
+            Built for Serious Global Travelers
+          </h2>
+          <p style={{ fontSize: '14px', color: 'var(--ink-muted)', marginTop: '4px' }}>
+            Everything you need from the first spark of inspiration to on-the-road execution.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--traverse-light)', color: 'var(--traverse)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Layers size={22} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>Drag-and-Drop Itinerary Builder</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', lineHeight: '1.5' }}>
+              Seamlessly swap stops, reorder destination sequences with fluid spring physics, and auto-calculate stay durations.
+            </p>
+          </Card>
+
+          <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--terrain-light)', color: 'var(--terrain)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <DollarSign size={22} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>Automated INR Budgeting</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', lineHeight: '1.5' }}>
+              Live expense summation in Rupees (₹) comparing transport, stays, meals, and tickets with Recharts category distributions.
+            </p>
+          </Card>
+
+          <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--gold-light)', color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Share2 size={22} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>Zero-Auth Public Sharing</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', lineHeight: '1.5' }}>
+              Generate unique shareable URLs so family and travel companions can view your complete itinerary without logging in.
+            </p>
+          </Card>
+
+          <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: '#F3E8FF', color: '#7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Globe2 size={22} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>50+ Preloaded World Cities</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', lineHeight: '1.5' }}>
+              Comprehensive destination catalog indexed by regional costs, coordinates, popularity, and curated activity ideas.
+            </p>
+          </Card>
+
+          <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--sand)', color: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Calendar size={22} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>Day-by-Day Timeline Gantt</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', lineHeight: '1.5' }}>
+              Visual chronological schedule matching each travel day to destination transitions and timed activity reservations.
+            </p>
+          </Card>
+
+          <Card padding="lg" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--traverse-light)', color: 'var(--traverse)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sliders size={22} />
+            </div>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--ink)' }}>6 Dynamic Aesthetic Themes</h3>
+            <p style={{ fontSize: '13px', color: 'var(--ink-muted)', lineHeight: '1.5' }}>
+              Switch seamlessly between Atlas Classic, Midnight Dark, Emerald Oasis, Nordic Frost, Sunset Terracotta, and Cyberpunk.
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* CTA Footer Banner */}
+      <section style={{ padding: '60px 20px 80px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div
+          style={{
+            backgroundColor: 'var(--ink)',
+            color: '#FFFFFF',
+            borderRadius: 'var(--radius-xl)',
+            padding: '48px 36px',
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-xl)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <Compass size={40} className="route-dash-animated" style={{ color: 'var(--traverse)', margin: '0 auto 16px' }} />
+          <h2 className="font-display" style={{ fontSize: '32px', fontWeight: '800', color: '#FFFFFF' }}>
+            Ready to Plan Your Next Grand Adventure?
+          </h2>
+          <p style={{ fontSize: '15px', color: 'rgba(255, 255, 255, 0.8)', maxWidth: '520px', margin: '10px auto 28px' }}>
+            Join thousands of travelers using GlobeTrotter to map multi-city routes and stay within budget.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <Button
+              size="lg"
+              variant="primary"
+              onClick={() => navigate('/auth/register')}
+            >
+              Get Started for Free
+            </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              onClick={() => navigate('/auth/login')}
+            >
+              Sign In with Google
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+==== END: frontend/src/features/home/HomePage.jsx ====
+
+
+==== THEME FILES FOUND ====
+==== END THEME FILES ====

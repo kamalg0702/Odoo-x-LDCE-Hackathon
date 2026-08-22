@@ -249,7 +249,8 @@ export default function BudgetBreakdownPage() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '12px 18px',
-                  backgroundColor: '#FFFFFF',
+                  // FIXED: hardcoded white → var(--paper-card)
+                  backgroundColor: 'var(--paper-card)',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--mist)'
                 }}
@@ -316,12 +317,12 @@ export default function BudgetBreakdownPage() {
               ]}
             />
             <Input
-              label="Amount ($)"
+              label="Amount (₹)"
               type="number"
               min="0.01"
               step="0.01"
               required
-              placeholder="150.00"
+              placeholder="5000"
               value={expenseForm.amount}
               onChange={(e) => setExpenseForm({ ...expenseForm, amount: e.target.value })}
             />

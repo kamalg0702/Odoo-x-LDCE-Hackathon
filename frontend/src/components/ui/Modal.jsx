@@ -38,7 +38,8 @@ export function Modal({
     >
       <div
         style={{
-          backgroundColor: '#FFFFFF',
+          // FIXED: hardcoded white → var(--paper-card)
+          backgroundColor: 'var(--paper-card)',
           borderRadius: 'var(--radius-xl)',
           width: '100%',
           maxWidth,
