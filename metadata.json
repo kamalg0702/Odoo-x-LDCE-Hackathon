@@ -1,0 +1,6 @@
+{
+  "name": "GlobeTrotter AI",
+  "description": "Adaptive AI travel operating system for multi-city trip planning, dynamic replanning, route & budget optimization, Trip Rescue, Travel DNA, and collaborative travel intelligence.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
